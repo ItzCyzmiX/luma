@@ -3,7 +3,7 @@ import os
 from luma.sdl.event import SDL_Event
 from luma.graphics.graphics import Luma_Graphics
 import luma.sdl.keys
-
+from platform import system
 
 class Luma:
 
@@ -26,7 +26,15 @@ class Luma:
     def __init__(self, sdl_path: str | None = None):
         self.window = None
         self.renderer = None
-        self.sdl_path = sdl_path or os.path.abspath("./src/luma/lib/SDL3.dll")
+
+        lib_ext = "dll"
+
+        if system() == "Linux":
+            lib_ext = "so"
+        elif system() == "Darwin":
+            lib_ext = "dylib"
+
+        self.sdl_path = sdl_path or os.path.abspath(f"./src/luma/lib/SDL3.{lib_ext}")
         self.sdl = ctypes.CDLL(self.sdl_path)
         self._setup_functions()
         self.graphics = None
