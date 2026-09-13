@@ -66,14 +66,18 @@ class Luma_Sprite:
 
     def draw(self):
         self.dest_rect = SDL_Rect(self.x, self.y, self.w, self.h)
-
+        point = (
+            SDL_Point(self.center_point[0], self.center_point[1])
+            if self.center_point is not None
+            else None
+        )
         self.sdl.render_texture(
             self.renderer,
             self.texture,
             self.source_rect,
             self.dest_rect,
             self.angle,
-            self.center_point,
+            point,
             self.flip_mode.value,
         )
 
@@ -94,7 +98,7 @@ class Luma_Sprite:
 
     def set_center_point(self, point: tuple[float, float] | None):
 
-        self.center_point = SDL_Point(point[0], point[1]) if point is not None else None
+        self.center_point = (point[0], point[1]) if point is not None else None
 
     def _load_texture(self):
         if self.img_path is None or not self.renderer:

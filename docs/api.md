@@ -23,6 +23,16 @@ Creates the SDL window and renderer. On success, `engine.graphics` is a
 Registers the function called after the renderer is cleared. The function
 should take no arguments.
 
+### `Sprite`
+
+`engine.Sprite` is a sprite creator tied to the engine's renderer.
+
+#### `Sprite.create(path, x, y, w=None, h=None)`
+
+Loads an image and returns a sprite. `path` is the image path, `x` and `y` are
+the destination coordinates, and omitted `w` or `h` use the image dimensions.
+See [Sprites](sprites.md) for transformations and sprite-sheet cropping.
+
 ### `update(function)`
 
 Registers the function called once per frame before drawing. The function

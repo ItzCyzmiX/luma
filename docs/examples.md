@@ -9,8 +9,9 @@ Run them from the repository root.
 python examples/starter.py
 ```
 
-`starter.py` demonstrates a window, overlapping rectangles, press callbacks,
-held-key movement, and frame-rate-independent motion.
+`starter.py` demonstrates a window, a loaded sprite, overlapping rectangles,
+press callbacks, held-key movement, flipping, rotation, and frame-rate-
+independent motion.
 
 ## Pong
 

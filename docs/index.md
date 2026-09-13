@@ -11,6 +11,7 @@ game state and game rules in ordinary Python code.
 	shutdown.
 - [Input](input.md): respond to key presses, key releases, and held keys.
 - [Graphics](graphics.md): set colors and draw filled or outlined rectangles.
+- [Sprites](sprites.md): load, draw, transform, and crop image textures.
 - [Examples](examples.md): run the included starter and Pong programs.
 - [API reference](api.md): signatures, constants, and supported behavior.
 
@@ -44,8 +45,8 @@ input-driven example.
 
 ## Scope
 
-Luma currently provides keyboard and quit events plus rectangle rendering. It
-does not yet provide built-in sprites, textures, text, audio, collision
+Luma currently provides keyboard and quit events, rectangle rendering, and
+image sprites. It does not yet provide built-in text, audio, collision
 detection, scenes, cameras, or asset management. Those systems can be built in
 Python on top of the engine, as the Pong example demonstrates.
 
