@@ -2,10 +2,7 @@
 
 ## Requirements
 
-- Python 3.10 or newer. The package metadata currently says `>=3.8`, but the
-  source uses the `str | None` type syntax, which requires Python 3.10+.
-- An SDL3 library included with the project or supplied through `sdl_path`.
-- A platform supported by the bundled SDL3 binary.
+- Python 3.10 or newer.
 
 Install the package from PyPI:
 

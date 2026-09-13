@@ -44,16 +44,6 @@ def update(dt):
 This tracks the current pressed state separately from press and release
 callbacks. The key is a member of `Luma.KEYS`, not a string.
 
-## Quit
-
-The quit event receives no arguments:
-
-```python
-@engine.on(Luma.EVENTS.QUIT)
-def on_quit():
-    print("Window closed")
-```
-
-Available event names are `KEYPRESS`, `KEYUP`, and `QUIT`. The key enum
+Available event names are `KEYPRESS`, `KEYUP`. The key enum
 contains letters, number keys, punctuation, `SPACE`, `RETURN`, `ESCAPE`,
 `DELETE`, `CAPSLOCK`, and `F1` through `F12`.
