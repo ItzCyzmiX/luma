@@ -152,7 +152,7 @@ game = Game()
 
 
 @engine.update
-def update(dt):
+def update(dt: float):
     game.update(dt)
 
 

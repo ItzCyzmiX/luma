@@ -1,6 +1,7 @@
 import ctypes
 
 from typing import TYPE_CHECKING
+from luma.core.error import Luma_Error
 from luma.sdl.shapes import SDL_Rect
 
 if TYPE_CHECKING:
@@ -57,13 +58,21 @@ class Luma_Graphics:
         r, g, b, *alpha = args
         a = alpha[0] if alpha else 255
 
-        self.sdl.SDL_SetRenderDrawColor(self.renderer, r, g, b, a)
+        if not self.sdl.SDL_SetRenderDrawColor(self.renderer, r, g, b, a):
+            error_msg = self.sdl.SDL_GetError()
+            raise Luma_Error(error_msg)
 
     def resetDrawColor(self):
-        self.sdl.SDL_SetRenderDrawColor(self.renderer, 0, 0, 0, 255)
+        if not self.sdl.SDL_SetRenderDrawColor(self.renderer, 0, 0, 0, 255):
+            error_msg = self.sdl.SDL_GetError()
+            raise Luma_Error(error_msg)
 
-    def drawRect(self, x, y, w, h, fill: bool = True):
+    def drawRect(self, x: float, y: float, w: float, h: float, fill: bool = True):
         if fill:
-            self.sdl.SDL_RenderFillRect(self.renderer, SDL_Rect(x, y, w, h))
+            if not self.sdl.SDL_RenderFillRect(self.renderer, SDL_Rect(x, y, w, h)):
+                error_msg = self.sdl.SDL_GetError()
+                raise Luma_Error(error_msg)
         else:
-            self.sdl.SDL_RenderRect(self.renderer, SDL_Rect(x, y, w, h))
+            if not self.sdl.SDL_RenderRect(self.renderer, SDL_Rect(x, y, w, h)):
+                error_msg = self.sdl.SDL_GetError()
+                raise Luma_Error(error_msg)

@@ -1,16 +1,18 @@
 import ctypes
 import os
+from luma.core.error import Luma_Error
 from luma.sdl.event import SDL_Event
 from luma.graphics.graphics import Luma_Graphics
 from luma.core.event import Luma_EventManager, DEFAULT_EVENTS_ENUM
-import luma.sdl.keys
+from luma.sdl.keys import KEYS as KEYS_
 from platform import system
 import sys
+from typing import Callable
 
 
 def get_sdl_path():
     if getattr(sys, "frozen", False):
-        base = sys._MEIPASS
+        base = sys._MEIPASS  # type: ignore
     else:
         base = os.path.dirname(__file__)
 
@@ -40,7 +42,7 @@ class Luma:
     SDL_EVENT_KEY_DOWN = 0x300
     SDL_EVENT_KEY_UP = 0x301
 
-    KEYS = luma.sdl.keys
+    KEYS = KEYS_
 
     EVENTS = DEFAULT_EVENTS_ENUM
 
@@ -65,11 +67,17 @@ class Luma:
         self._update_method = None
         self.event_manager = Luma_EventManager()
 
-        self._keys_pressed = set()
+        self._keys_pressed: set[KEYS_] = set()
 
-        self.sdl.SDL_Init(Luma.SDL_INIT_VIDEO)
+        if not self.sdl.SDL_Init(Luma.SDL_INIT_VIDEO):
+            error_msg = self.sdl.SDL_GetError()
+
+            raise Luma_Error(error_msg)
 
     def _setup_functions(self):
+        self.sdl.SDL_Init.argtypes = [ctypes.c_uint32]
+        self.sdl.SDL_Init.restype = ctypes.c_bool
+
         self.sdl.SDL_CreateWindow.argtypes = [
             ctypes.c_char_p,  # title
             ctypes.c_int,  # w
@@ -123,36 +131,52 @@ class Luma:
 
         self.sdl.SDL_SetRenderDrawBlendMode.restype = ctypes.c_bool
 
+        self.sdl.SDL_GetError.restype = ctypes.c_char_p
+
     def create_window(self, title: str, width: int, height: int, flags: int = 0):
 
         self.window = self.sdl.SDL_CreateWindow(title.encode(), width, height, flags)
 
         if self.window is None:
             self.quit()
+            error_msg = self.sdl.SDL_GetError()
+            raise Luma_Error(error_msg)
 
-        self.renderer = self.sdl.SDL_CreateRenderer(self.window, None)
+        self.renderer = self.sdl.SDL_CreateRenderer(
+            self.window, None
+        )
+        
 
         if self.renderer is None:
             self.quit()
+            error_msg = self.sdl.SDL_GetError()
+            
+            raise Luma_Error(error_msg)
 
-        self.sdl.SDL_SetRenderDrawBlendMode(self.renderer, Luma.SDL_BLENDMODE_BLEND)
+        if not self.sdl.SDL_SetRenderDrawBlendMode(
+            self.renderer, Luma.SDL_BLENDMODE_BLEND
+        ):
+            self.quit()
+            error_msg = self.sdl.SDL_GetError()
+            raise Luma_Error(error_msg)
 
         self.graphics = Luma_Graphics(self)
 
-    def draw(self, fn):
+    def draw(self, fn: Callable):
         self._draw_method = fn
 
-    def update(self, func):
-        self._update_method = func
+    def update(self, fn: Callable):
+        self._update_method = fn
 
-    def on(self, event_name: str):
+    def on(self, event_name: DEFAULT_EVENTS_ENUM):
         def decorator(func):
             self.event_manager.new_event_callback(event_name, func)
             return func
 
         return decorator
 
-    def isKeyHeld(self, key: str):
+    def isKeyHeld(self, key: KEYS_):
+
         return key in self._keys_pressed
 
     def run(self):
@@ -174,18 +198,20 @@ class Luma:
 
                     if event.type == Luma.SDL_EVENT_KEY_DOWN:
 
-                        if event.key.key not in self._keys_pressed:
+                        if Luma.KEYS(event.key.key) not in self._keys_pressed:
                             self.event_manager.dispatch(
-                                Luma.EVENTS.KEYPRESS, event.key.key
+                                Luma.EVENTS.KEYPRESS, Luma.KEYS(event.key.key)
                             )
 
-                        self._keys_pressed.add(event.key.key)
+                        self._keys_pressed.add(Luma.KEYS(event.key.key))
 
                     if event.type == Luma.SDL_EVENT_KEY_UP:
 
-                        self._keys_pressed.discard(event.key.key)
+                        self._keys_pressed.discard(Luma.KEYS(event.key.key))
 
-                        self.event_manager.dispatch(Luma.EVENTS.KEYUP, event.key.key)
+                        self.event_manager.dispatch(
+                            Luma.EVENTS.KEYUP, Luma.KEYS(event.key.key)
+                        )
 
                 if callable(self._update_method):
                     self._update_method(dt)
@@ -198,7 +224,9 @@ class Luma:
                 self.sdl.SDL_RenderPresent(self.renderer)
 
         except Exception as e:
-            print(e)
+            self.quit()
+            
+            raise e
 
         finally:
             self.quit()

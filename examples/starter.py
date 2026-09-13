@@ -29,13 +29,13 @@ def quit():
 
 
 @engine.on(Luma.EVENTS.KEYPRESS)
-def input(key):
+def input(key: Luma.KEYS):
     if key == Luma.KEYS.SPACE:
         print("jump")
 
 
 @engine.on(Luma.EVENTS.KEYPRESS)
-def e(key):
+def e(key: Luma.KEYS):
     if key == Luma.KEYS.A:
         print("a")
 
