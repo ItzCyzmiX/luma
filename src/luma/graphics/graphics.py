@@ -1,13 +1,13 @@
 import ctypes
 
 from typing import TYPE_CHECKING
-from pysdl.sdl.shapes import SDL_Rect
+from luma.sdl.shapes import SDL_Rect
 
 if TYPE_CHECKING:
-    from pysdl.core.engine import PySDL3
+    from luma.core.engine import Luma
 
 
-class PySDL3_Graphics:
+class Luma_Graphics:
     OPAQUE = 255
     TRANSPARENT = 0
     RED = (255, 0, 0, 255)
@@ -16,7 +16,7 @@ class PySDL3_Graphics:
     BLACK = (0, 0, 0, 255)
     WHITE = (255, 255, 255, 255)
 
-    def __init__(self, sdl: "PySDL3"):
+    def __init__(self, sdl: "Luma"):
         self.engine = sdl
         self._setup_functions()
 

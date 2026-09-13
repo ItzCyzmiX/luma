@@ -1,6 +1,6 @@
-from pysdl import PySDL3
+from luma import Luma
 
-engine = PySDL3()
+engine = Luma()
 
 engine.create_window("aloha", 600, 400)
 
@@ -23,13 +23,13 @@ def draw():
 def update(dt):
     global x, y
 
-    if engine.isKeyPressed(PySDL3.KEYS.KEY_D):
+    if engine.isKeyPressed(Luma.KEYS.KEY_D):
         x += speed * dt
-    elif engine.isKeyPressed(PySDL3.KEYS.KEY_Q):
+    elif engine.isKeyPressed(Luma.KEYS.KEY_Q):
         x -= speed * dt
-    elif engine.isKeyPressed(PySDL3.KEYS.KEY_S):
+    elif engine.isKeyPressed(Luma.KEYS.KEY_S):
         y += speed * dt
-    elif engine.isKeyPressed(PySDL3.KEYS.KEY_Z):
+    elif engine.isKeyPressed(Luma.KEYS.KEY_Z):
         y -= speed * dt
 
 

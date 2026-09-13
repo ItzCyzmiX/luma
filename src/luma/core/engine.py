@@ -1,11 +1,11 @@
 import ctypes
 import os
-from pysdl.sdl.event import SDL_Event
-from pysdl.graphics.graphics import PySDL3_Graphics
-import pysdl.sdl.keys
+from luma.sdl.event import SDL_Event
+from luma.graphics.graphics import Luma_Graphics
+import luma.sdl.keys
 
 
-class PySDL3:
+class Luma:
 
     SDL_INIT_AUDIO = 0x10
     SDL_INIT_VIDEO = 0x20
@@ -21,12 +21,12 @@ class PySDL3:
     SDL_EVENT_KEY_DOWN = 0x300
     SDL_EVENT_KEY_UP = 0x301
 
-    KEYS = pysdl.sdl.keys
+    KEYS = luma.sdl.keys
 
     def __init__(self, sdl_path: str | None = None):
         self.window = None
         self.renderer = None
-        self.sdl_path = sdl_path or os.path.abspath("./src/pysdl/lib/SDL3.dll")
+        self.sdl_path = sdl_path or os.path.abspath("./src/luma/lib/SDL3.dll")
         self.sdl = ctypes.CDLL(self.sdl_path)
         self._setup_functions()
         self.graphics = None
@@ -37,7 +37,7 @@ class PySDL3:
 
         self._keys_pressed = set()
 
-        self.sdl.SDL_Init(PySDL3.SDL_INIT_VIDEO)
+        self.sdl.SDL_Init(Luma.SDL_INIT_VIDEO)
 
     def _setup_functions(self):
         self.sdl.SDL_CreateWindow.argtypes = [
@@ -105,9 +105,9 @@ class PySDL3:
         if self.renderer is None:
             self.quit()
 
-        self.sdl.SDL_SetRenderDrawBlendMode(self.renderer, PySDL3.SDL_BLENDMODE_BLEND)
+        self.sdl.SDL_SetRenderDrawBlendMode(self.renderer, Luma.SDL_BLENDMODE_BLEND)
 
-        self.graphics = PySDL3_Graphics(self)
+        self.graphics = Luma_Graphics(self)
 
     def draw(self, fn):
         self._draw_method = fn
@@ -131,14 +131,14 @@ class PySDL3:
                 event = SDL_Event()
 
                 while self.sdl.SDL_PollEvent(ctypes.byref(event)):
-                    if event.type == PySDL3.SDL_EVENT_QUIT:
+                    if event.type == Luma.SDL_EVENT_QUIT:
                         self.running = False
                         break
 
-                    if event.type == PySDL3.SDL_EVENT_KEY_DOWN:
+                    if event.type == Luma.SDL_EVENT_KEY_DOWN:
                         self._keys_pressed.add(event.key.key)
 
-                    if event.type == PySDL3.SDL_EVENT_KEY_UP:
+                    if event.type == Luma.SDL_EVENT_KEY_UP:
                         try:
 
                             self._keys_pressed.remove(event.key.key)

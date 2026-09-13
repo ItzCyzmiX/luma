@@ -5,9 +5,9 @@ build-backend = "setuptools.build_meta"
 
 [project]
 version = "0.1.0"
-name = "pysdl3"
+name = "luma"
 requires-python = ">=3.8"
-description = "pysdl3"
+description = "A lightweight python game engine powered by SDL3"
 readme = "README.md"
 authors = [
   { name="CyzmiX", email="itzmedigamingx@gmail.com" },

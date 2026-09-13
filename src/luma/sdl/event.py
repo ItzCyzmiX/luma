@@ -1,5 +1,5 @@
 import ctypes
-from pysdl.sdl.keys import SDL_KeyboardEvent
+from luma.sdl.keys import SDL_KeyboardEvent
 
 
 class SDL_Event(ctypes.Union):
