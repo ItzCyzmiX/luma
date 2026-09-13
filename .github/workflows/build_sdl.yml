@@ -33,10 +33,7 @@ jobs:
 
       - name: Configure SDL3
         run: |
-          cmake -S SDL -B build \
-            -DCMAKE_BUILD_TYPE=Release \
-            -DSDL_SHARED=ON \
-            -DSDL_STATIC=OFF
+          cmake -S SDL -B build -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_UNIX_CONSOLE_BUILD=ON
 
       - name: Build SDL3
         run: cmake --build build --config Release
