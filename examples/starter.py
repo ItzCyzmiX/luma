@@ -2,16 +2,23 @@ from luma import Luma
 
 engine = Luma()
 
-engine.create_window("aloha", 600, 400)
-
+engine.create_window("aloha", 1280, 720)
+spr = engine.Sprite.create("examples/Ultron.jpg", 0, 0)
 g = engine.graphics
 
 x, y = 10, 10
 speed = 330.0
 
 
+@engine.start
+def init_():
+    print("initing very important stuff")
+
+
 @engine.draw
 def draw():
+    spr.draw()
+
     g.setDrawColor(105, 0, 0)
 
     g.drawRect(x, y, 100, 100)
@@ -46,12 +53,17 @@ def update(dt):
 
     if engine.isKeyHeld(Luma.KEYS.D):
         x += speed * dt
+        spr.flip_mode = engine.Sprite.FLIP.VERTICAL
     elif engine.isKeyHeld(Luma.KEYS.Q):
         x -= speed * dt
+        spr.flip_mode = engine.Sprite.FLIP.NONE
     elif engine.isKeyHeld(Luma.KEYS.S):
         y += speed * dt
     elif engine.isKeyHeld(Luma.KEYS.Z):
         y -= speed * dt
+
+    if engine.isKeyHeld(Luma.KEYS.R):
+        spr.angle += 1
 
 
 engine.run()

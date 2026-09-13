@@ -1,5 +1,5 @@
+from collections.abc import Callable
 from enum import Enum
-from typing import Callable
 
 
 class DEFAULT_EVENTS_ENUM(Enum):

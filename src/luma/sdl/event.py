@@ -1,4 +1,5 @@
 import ctypes
+
 from luma.sdl.keys import SDL_KeyboardEvent
 
 
