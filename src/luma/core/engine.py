@@ -2,8 +2,27 @@ import ctypes
 import os
 from luma.sdl.event import SDL_Event
 from luma.graphics.graphics import Luma_Graphics
+from luma.core.event import Luma_EventManager, DEFAULT_EVENTS_ENUM
 import luma.sdl.keys
 from platform import system
+import sys
+
+
+def get_sdl_path():
+    if getattr(sys, "frozen", False):
+        base = sys._MEIPASS
+    else:
+        base = os.path.dirname(__file__)
+
+    lib_ext = "dll"
+
+    if system() == "Linux":
+        lib_ext = "so"
+    elif system() == "Darwin":
+        lib_ext = "dylib"
+
+    return os.path.join(base, os.path.abspath(f"./src/luma/lib/SDL3.{lib_ext}"))
+
 
 class Luma:
 
@@ -22,6 +41,8 @@ class Luma:
     SDL_EVENT_KEY_UP = 0x301
 
     KEYS = luma.sdl.keys
+
+    EVENTS = DEFAULT_EVENTS_ENUM
 
     def __init__(self, sdl_path: str | None = None):
         self.window = None
@@ -42,6 +63,7 @@ class Luma:
         self.running = True
         self._draw_method = None
         self._update_method = None
+        self.event_manager = Luma_EventManager()
 
         self._keys_pressed = set()
 
@@ -123,7 +145,14 @@ class Luma:
     def update(self, func):
         self._update_method = func
 
-    def isKeyPressed(self, key: str):
+    def on(self, event_name: str):
+        def decorator(func):
+            self.event_manager.new_event_callback(event_name, func)
+            return func
+
+        return decorator
+
+    def isKeyHeld(self, key: str):
         return key in self._keys_pressed
 
     def run(self):
@@ -144,14 +173,19 @@ class Luma:
                         break
 
                     if event.type == Luma.SDL_EVENT_KEY_DOWN:
+
+                        if event.key.key not in self._keys_pressed:
+                            self.event_manager.dispatch(
+                                Luma.EVENTS.KEYPRESS, event.key.key
+                            )
+
                         self._keys_pressed.add(event.key.key)
 
                     if event.type == Luma.SDL_EVENT_KEY_UP:
-                        try:
 
-                            self._keys_pressed.remove(event.key.key)
-                        except KeyError:
-                            pass
+                        self._keys_pressed.discard(event.key.key)
+
+                        self.event_manager.dispatch(Luma.EVENTS.KEYUP, event.key.key)
 
                 if callable(self._update_method):
                     self._update_method(dt)
@@ -176,3 +210,5 @@ class Luma:
             self.sdl.SDL_DestroyWindow(self.window)
 
         self.sdl.SDL_Quit()
+
+        self.event_manager.dispatch(Luma.EVENTS.QUIT)

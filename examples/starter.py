@@ -16,20 +16,41 @@ def draw():
 
     g.drawRect(x, y, 100, 100)
 
+    g.setDrawColor(0, 140, 0)
+
+    g.drawRect(x + 30, y + 20, 100, 100)
+
     g.resetDrawColor()
+
+
+@engine.on(Luma.EVENTS.QUIT)
+def quit():
+    print("bye bye")
+
+
+@engine.on(Luma.EVENTS.KEYPRESS)
+def input(key):
+    if key == Luma.KEYS.SPACE:
+        print("jump")
+
+
+@engine.on(Luma.EVENTS.KEYPRESS)
+def e(key):
+    if key == Luma.KEYS.A:
+        print("a")
 
 
 @engine.update
 def update(dt):
     global x, y
 
-    if engine.isKeyPressed(Luma.KEYS.KEY_D):
+    if engine.isKeyHeld(Luma.KEYS.D):
         x += speed * dt
-    elif engine.isKeyPressed(Luma.KEYS.KEY_Q):
+    elif engine.isKeyHeld(Luma.KEYS.Q):
         x -= speed * dt
-    elif engine.isKeyPressed(Luma.KEYS.KEY_S):
+    elif engine.isKeyHeld(Luma.KEYS.S):
         y += speed * dt
-    elif engine.isKeyPressed(Luma.KEYS.KEY_Z):
+    elif engine.isKeyHeld(Luma.KEYS.Z):
         y -= speed * dt
 
 
