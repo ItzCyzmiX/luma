@@ -1,0 +1,70 @@
+name: Build SDL3
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build SDL3 (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: windows
+          - os: ubuntu-latest
+            artifact: linux
+          - os: macos-latest
+            artifact: macos
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout SDL3
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL
+          path: SDL
+
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Configure SDL3
+        run: |
+          cmake -S SDL -B build \
+            -DCMAKE_BUILD_TYPE=Release \
+            -DSDL_SHARED=ON \
+            -DSDL_STATIC=OFF
+
+      - name: Build SDL3
+        run: cmake --build build --config Release
+
+      # Windows
+      - name: Prepare Windows binary
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          mkdir -p output
+          cp build/Release/SDL3.dll output/SDL3.dll
+
+      # Linux
+      - name: Prepare Linux binary
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p output
+          cp build/libSDL3.so output/libSDL3.so
+
+      # macOS
+      - name: Prepare macOS binary
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p output
+          cp build/libSDL3.dylib output/libSDL3.dylib
+
+      - name: Upload SDL3 binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: SDL3-${{ matrix.artifact }}
+          path: output/
