@@ -1,0 +1,14 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+version = "0.1.0"
+name = "pysdl3"
+requires-python = ">=3.8"
+description = "pysdl3"
+readme = "README.md"
+authors = [
+  { name="CyzmiX", email="itzmedigamingx@gmail.com" },
+]
