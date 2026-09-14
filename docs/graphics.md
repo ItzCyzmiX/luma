@@ -62,7 +62,41 @@ Coordinates and dimensions accept integers or floats. The origin is the
 window's top-left corner, with `x` increasing to the right and `y` increasing
 downward.
 
+## Points and lines
+
+Draw a single point with `drawPoint(x, y)`:
+
+```python
+graphics.drawPoint(80, 100)
+```
+
+Draw a line between two points with `drawLine(x1, y1, x2, y2)`:
+
+```python
+graphics.drawLine(80, 100, 220, 160)
+```
+
+Point and line coordinates accept integers or floats and use the current draw
+color.
+
+## Circles
+
+Draw a filled circle with `drawCircle(center_x, center_y, radius)`:
+
+```python
+graphics.drawCircle(320, 240, 40)
+```
+
+Set `filled=False` to draw only the circumference:
+
+```python
+graphics.drawCircle(320, 240, 40, filled=False)
+```
+
+The center coordinates and radius accept integers or floats. Circles use the
+current draw color, just like the other primitive shapes.
+
 ## Current rendering surface
 
-The public graphics API currently supports draw colors, rectangles, textures and sprites.
-While text, fonts, and audio are not part of this API yet.
+The public graphics API currently supports draw colors, primitive shapes,
+textures, and sprites. Text, fonts, and audio are not part of this API yet.

@@ -1,8 +1,9 @@
 # Luma Engine
 
 Luma is a small Python game engine built on SDL3. It gives you a window, a
-frame loop, keyboard input, and immediate-mode rectangle drawing while leaving
-game state and game rules in ordinary Python code.
+frame loop, keyboard input, and immediate-mode primitive shape drawing while leaving
+game state and game rules in ordinary Python code. Its graphics API includes
+immediate-mode primitive shape drawing and image sprites.
 
 ## Documentation
 
@@ -10,7 +11,7 @@ game state and game rules in ordinary Python code.
 - [Engine](engine.md): understand windows, callbacks, the frame loop, and
   shutdown.
 - [Input](input.md): respond to key presses, key releases, and held keys.
-- [Graphics](graphics.md): set colors and draw filled or outlined rectangles.
+- [Graphics](graphics.md): set colors and draw primitive shapes, textures, and sprites.
 - [Sprites](sprites.md): load, draw, transform, and crop image textures.
 - [Examples](examples.md): run the included starter and Pong programs.
 - [API reference](api.md): signatures, constants, and supported behavior.
@@ -45,7 +46,7 @@ input-driven example.
 
 ## Scope
 
-Luma currently provides keyboard and quit events, rectangle rendering, and
-image sprites. It does not yet provide built-in text, audio, collision
+Luma currently provides keyboard and quit events, primitive shape rendering,
+and image sprites. It does not yet provide built-in text, audio, collision
 detection, scenes, cameras, or asset management. Those systems can be built in
 Python on top of the engine, as the Pong example demonstrates.

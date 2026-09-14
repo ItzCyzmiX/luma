@@ -36,6 +36,8 @@ The sprite exposes these mutable properties:
 | `flip_mode`    | A value from `engine.Sprite.FLIP`.                                                                         |
 | `source_rect`  | a 4 floats tuple representing the drawn source rectangle (x, y, width, height)                             |
 | `center_point` | Optional rotation center as a `tuple[float, float]`, or `None` for the center of the sprite (dest_rect/2). |
+| `alpha`        | Texture opacity from `0` (transparent) to `255` (opaque).                                                   |
+| `color_mod`    | RGB texture modulation as a `(red, green, blue)` tuple.                                                     |
 
 For example, frame-rate-independent movement and rotation look like this:
 
@@ -81,6 +83,23 @@ Pass `None` to use SDL's default center behavior:
 ```python
 sprite.set_center_point((16, 16))
 sprite.set_center_point(None)
+```
+
+## Appearance and lifetime
+
+Set `alpha` and `color_mod` before drawing to change a sprite's appearance:
+
+```python
+sprite.alpha = 160
+sprite.color_mod = (255, 220, 220)
+```
+
+Sprites created from the same image path share a cached texture. Call
+`kill()` when a sprite is no longer needed to release its texture reference;
+calling `draw()` afterward has no effect:
+
+```python
+sprite.kill()
 ```
 
 The image path is loaded when the sprite is created. A missing or unreadable

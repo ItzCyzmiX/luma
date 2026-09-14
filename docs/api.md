@@ -91,6 +91,19 @@ Sets the draw color to opaque black.
 Draws a filled rectangle by default. Pass `fill=False` to draw only its
 outline.
 
+### `drawPoint(x, y)`
+
+Draws a single point using the current draw color.
+
+### `drawLine(x1, y1, x2, y2)`
+
+Draws a line between the two supplied points using the current draw color.
+
+### `drawCircle(center_x, center_y, radius, filled: bool = True)`
+
+Draws a filled circle by default. Pass `filled=False` to draw only its
+circumference.
+
 ### `setBackgroundColor(*args)`
 
 Sets the RGBA color used to clear the renderer before each draw callback.
