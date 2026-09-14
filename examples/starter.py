@@ -10,7 +10,7 @@ sprite = engine.Sprite.create(
 )
 sprite_2 = engine.Sprite.create(path="examples/Ultron.jpg", x=0, y=0)
 
-graphics = engine.graphics
+graphics = engine.Graphics
 
 SPRITE_SPEED = 330.0
 RECT_X, RECT_Y = 10, 10

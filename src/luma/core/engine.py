@@ -71,7 +71,7 @@ class Luma:
 
         self.event_manager = Luma_EventManager()
         self.Sprite = Luma_SpriteCreator(self)
-        self.graphics = None
+        self.Graphics = None
         self.Mouse = Luma_Mouse(self)
 
         if not self.sdl.init(SDL_INIT.SDL_INIT_VIDEO):
