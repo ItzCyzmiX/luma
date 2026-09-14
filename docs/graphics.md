@@ -36,6 +36,13 @@ usual `0` to `255` range.
 graphics.resetDrawColor()
 ```
 
+Set the color used to clear the renderer at the start of each frame with
+`setBackgroundColor`:
+
+```python
+graphics.setBackgroundColor(graphics.COLORS.GREEN)
+```
+
 ## Rectangles
 
 Draw a filled rectangle with `drawRect(x, y, width, height)`:

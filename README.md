@@ -17,7 +17,7 @@ from luma import Luma
 
 engine = Luma()
 engine.create_window("Luma", 640, 480)
-graphics = engine.graphics
+graphics = engine.Graphics
 
 
 @engine.draw

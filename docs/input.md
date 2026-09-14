@@ -47,3 +47,22 @@ callbacks. The key is a member of `Luma.KEYS`, not a string.
 Available event names are `KEYPRESS`, `KEYUP`. The key enum
 contains letters, number keys, punctuation, `SPACE`, `RETURN`, `ESCAPE`,
 `DELETE`, `CAPSLOCK`, and `F1` through `F12`.
+
+## Mouse input
+
+Mouse callbacks receive button and motion data:
+
+```python
+@engine.on(Luma.EVENTS.MOUSEPRESS)
+def on_mouse_press(button, position, clicks):
+    print(button, position, clicks)
+
+
+@engine.on(Luma.EVENTS.MOUSEMOTION)
+def on_mouse_motion(position, relative):
+    print(position, relative)
+```
+
+`button` is `"L"`, `"M"`, or `"R"` for the primary three buttons, or an
+empty string for another button. `engine.Mouse.x` and `engine.Mouse.y` track
+the latest motion position; `engine.Mouse.get_pos()` queries SDL.

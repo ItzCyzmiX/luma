@@ -13,6 +13,9 @@ pass it explicitly:
 engine = Luma(sdl_path="path/to/SDL3.dll")
 ```
 
+Pass `sdl_image_path` as well when SDL3_image is installed in a custom
+location. Both paths default to bundled libraries.
+
 Use the platform-specific library extension on Linux (`.so`) and macOS
 (`.dylib`). If SDL initialization fails, Luma raises `Luma_Error`.
 
@@ -23,7 +26,8 @@ engine.create_window("Title", 800, 600)
 ```
 
 The method takes `title`, `width`, `height`, and an optional SDL window `flags`
-integer. After it succeeds, `engine.Graphics` is ready to use.
+integer. After it succeeds, `engine.Graphics` and `engine.Mouse` are ready to
+use.
 
 ## Callbacks
 
@@ -42,6 +46,9 @@ def draw():
 
 `update(dt)` is for changing game state. `draw()` is for rendering the current
 state. The callbacks are called once per frame when registered.
+
+Use `@engine.start` for one-time setup that should run after the window is
+created and immediately before the loop begins.
 
 ## Frame order
 

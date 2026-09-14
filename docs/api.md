@@ -8,20 +8,25 @@ from luma import Luma
 
 ## `Luma`
 
-### `Luma(sdl_path: str | None = None)`
+### `Luma(sdl_path: str | None = None, sdl_image_path: str | None = None)`
 
-Loads SDL3 and initializes video. `sdl_path` overrides the default bundled
-library location.
+Loads SDL3 and SDL3_image and initializes video. The optional paths override
+the default bundled library locations.
 
 ### `create_window(title: str, width: int, height: int, flags: int = 0)`
 
-Creates the SDL window and renderer. On success, `engine.graphics` is a
-`Luma_Graphics` instance.
+Creates the SDL window and renderer. On success, `engine.Graphics` is a
+`Luma_Graphics` instance and `engine.Mouse` is available.
 
 ### `draw(function)`
 
 Registers the function called after the renderer is cleared. The function
 should take no arguments.
+
+### `start(function)`
+
+Registers a function called once after window creation and before the main
+loop starts.
 
 ### `Sprite`
 
@@ -61,6 +66,9 @@ Destroys SDL resources, quits SDL, and dispatches `Luma.EVENTS.QUIT`.
 | `KEYPRESS` | `key: Luma.KEYS` |
 | `KEYUP` | `key: Luma.KEYS` |
 | `QUIT` | none |
+| `MOUSEPRESS` | `button, position, clicks` |
+| `MOUSEUP` | `button, position, clicks` |
+| `MOUSEMOTION` | `position, relative` |
 
 ## `Luma.KEYS`
 
@@ -82,6 +90,21 @@ Sets the draw color to opaque black.
 
 Draws a filled rectangle by default. Pass `fill=False` to draw only its
 outline.
+
+### `setBackgroundColor(*args)`
+
+Sets the RGBA color used to clear the renderer before each draw callback.
+
+## `Luma.Mouse`
+
+`engine.Mouse.x` and `engine.Mouse.y` expose the latest mouse position from a
+motion event. `engine.Mouse.get_pos()` queries SDL and returns `(x, y)`.
+
+## Sprite properties
+
+Sprites support `angle`, `flip_mode`, `source_rect`, and `center_point` for
+transforms and sprite-sheet cropping. `alpha` and `color_mod` apply texture
+modulation during `draw()`. Call `kill()` when a sprite is no longer needed.
 
 ## Errors
 
