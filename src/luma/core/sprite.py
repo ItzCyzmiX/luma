@@ -84,7 +84,6 @@ class Luma_Sprite:
     @alpha.setter
     def alpha(self, a: int):
         self._alpha = a
-
         # self.sdl.set_texture_alpha(self.texture, self._alpha)
 
     @property
@@ -113,7 +112,7 @@ class Luma_Sprite:
             else None
         )
 
-        self.sdl.set_texture_alpha(self.texture, self._alpha)
+        self.sdl.set_texture_alpha(None, self._alpha)
         self.sdl.set_texture_color_mod(self.texture, *self._color_mod)
 
         self.sdl.render_texture(
