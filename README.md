@@ -63,7 +63,7 @@ Documentation is available [here](https://itzcyzmix.github.io/luma/)
 
 ## Requirements
 
-- Python 3.8 or newer
+- Python 3.10 or newer
 - An SDL3-compatible system
 
 ## License
