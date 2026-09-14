@@ -20,12 +20,23 @@ class Alpha:
     TRANSPARENT = 0
 
 
+def get_rgba(*args) -> tuple[int, int, int, int]:
+    if len(args) == 1 and isinstance(args[0], (tuple, list)):
+        args = args[0]
+
+    r, g, b, *alpha = args
+    a = alpha[0] if alpha else 255
+
+    return (r, g, b, a)
+
+
 class Luma_Graphics:
     ALPHA = Alpha
     COLORS = Colors
 
     def __init__(self, sdl: "Luma"):
         self.engine = sdl
+        self.background_color: tuple[int, int, int, int] = Colors.BLACK
 
     @property
     def renderer(self):
@@ -35,12 +46,13 @@ class Luma_Graphics:
     def sdl(self):
         return self.engine.sdl
 
-    def setDrawColor(self, *args):
-        if len(args) == 1 and isinstance(args[0], (tuple, list)):
-            args = args[0]
+    def setBackgroundColor(self, *args):
 
-        r, g, b, *alpha = args
-        a = alpha[0] if alpha else 255
+        self.background_color = get_rgba(*args)
+
+    def setDrawColor(self, *args):
+
+        r, g, b, a = get_rgba(*args)
 
         if not self.sdl.set_render_draw_color(self.renderer, r, g, b, a):
             error_msg = self.sdl.get_error()

@@ -189,6 +189,10 @@ class Luma:
                 if callable(self._update_method):
                     self._update_method(dt)
 
+                self.sdl.set_render_draw_color(
+                    self.renderer, *self.Graphics.background_color
+                )
+
                 self.sdl.render_clear(self.renderer)
 
                 if callable(self._draw_method):

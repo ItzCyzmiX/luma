@@ -12,6 +12,7 @@ sprite_2 = engine.Sprite.create(path="examples/Ultron.jpg", x=0, y=0)
 
 graphics = engine.Graphics
 
+
 SPRITE_SPEED = 330.0
 RECT_X, RECT_Y = 10, 10
 
@@ -19,6 +20,7 @@ RECT_X, RECT_Y = 10, 10
 @engine.start
 def init_():
     print("initing very important stuff")
+    graphics.setBackgroundColor(graphics.COLORS.GREEN)
 
 
 @engine.draw
