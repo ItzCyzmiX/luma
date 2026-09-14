@@ -1,8 +1,6 @@
 import ctypes
 from typing import TYPE_CHECKING
 
-from luma.core.error import Luma_Error
-
 if TYPE_CHECKING:
     from luma.core.engine import Luma
 
@@ -19,16 +17,14 @@ class Luma_Mouse:
         return self.engine.sdl
 
     @property
-    def x(self):
+    def x(self) -> float:
         return self._x.value
 
     @property
-    def y(self):
+    def y(self) -> float:
         return self._y.value
 
     def get_pos(self) -> tuple[float, float]:
-        self.engine.sdl.get_mouse_position(ctypes.byref(self._x), ctypes.byref(self._y))
-
         return (self._x.value, self._y.value)
 
     def _set_pos(self, pos):

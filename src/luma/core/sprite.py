@@ -41,8 +41,13 @@ class Luma_Sprite:
             FLIP_MODE.NONE,
         )
 
-        self.dest_rect = SDL_Rect(self.x, self.y, self.w, self.h)
-        self.source_rect = SDL_Rect(0, 0, self.w, self.h)
+        self.dest_rect: tuple[float, float, float, float] = (
+            self.x,
+            self.y,
+            self.w,
+            self.h,
+        )
+        self.source_rect: tuple[float, float, float, float] = (0, 0, self.w, self.h)
 
     def create(
         self,
@@ -65,16 +70,28 @@ class Luma_Sprite:
         if h is not None:
             self.h = h
 
-        self.dest_rect = SDL_Rect(self.x, self.y, self.w, self.h)
-        self.source_rect: SDL_Rect = SDL_Rect(0, 0, self.w, self.h)
+        self.dest_rect = (
+            self.x,
+            self.y,
+            self.w,
+            self.h,
+        )
+        self.source_rect = (0, 0, self.w, self.h)
+
         return self
 
     def draw(self):
         if not self.texture:
             return
 
-        self.dest_rect = SDL_Rect(self.x, self.y, self.w, self.h)
-        point = (
+        dest_rect = SDL_Rect(self.x, self.y, self.w, self.h)
+        source_rect = SDL_Rect(
+            self.source_rect[0],
+            self.source_rect[1],
+            self.source_rect[2],
+            self.source_rect[3],
+        )
+        center_point = (
             SDL_Point(self.center_point[0], self.center_point[1])
             if self.center_point is not None
             else None
@@ -82,15 +99,12 @@ class Luma_Sprite:
         self.sdl.render_texture(
             self.renderer,
             self.texture,
-            self.source_rect,
-            self.dest_rect,
+            source_rect,
+            dest_rect,
             self.angle,
-            point,
+            center_point,
             self.flip_mode.value,
         )
-
-    def set_source_rect(self, x: float, y: float, w: float, h: float):
-        self.source_rect = SDL_Rect(x, y, w, h)
 
     @property
     def sdl(self):
@@ -108,7 +122,6 @@ class Luma_Sprite:
         self.center_point = (point[0], point[1]) if point is not None else None
 
     def kill(self):
-
         if self.img_path and self.sprite_creator and self.texture:
             self.sprite_creator.loaded_textures[self.img_path]["ref_count"] -= 1
 

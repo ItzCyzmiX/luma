@@ -168,6 +168,7 @@ class Luma:
                             button = ["L", "M", "R"][event.button.button - 1]
                         except IndexError:
                             pass
+
                         self.event_manager.dispatch(
                             Luma.EVENTS.MOUSEPRESS
                             if event.type == SDL_EVENT.SDL_EVENT_MOUSE_DOWN

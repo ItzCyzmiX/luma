@@ -28,12 +28,13 @@ engine.run()
 
 The sprite exposes these mutable properties:
 
-| Property | Meaning |
-| --- | --- |
-| `x`, `y` | Destination position in pixels. |
-| `w`, `h` | Destination size in pixels. |
-| `angle` | Rotation angle passed to SDL. |
-| `flip_mode` | A value from `engine.Sprite.FLIP`. |
+| Property       | Meaning                                                                                                    |
+| -------------- | ---------------------------------------------------------------------------------------------------------- |
+| `x`, `y`       | Destination position in pixels.                                                                            |
+| `w`, `h`       | Destination size in pixels.                                                                                |
+| `angle`        | Rotation angle passed to SDL.                                                                              |
+| `flip_mode`    | A value from `engine.Sprite.FLIP`.                                                                         |
+| `source_rect`  | a 4 floats tuple representing the drawn source rectangle (x, y, width, height)                             |
 | `center_point` | Optional rotation center as a `tuple[float, float]`, or `None` for the center of the sprite (dest_rect/2). |
 
 For example, frame-rate-independent movement and rotation look like this:
@@ -58,11 +59,11 @@ sprite.flip_mode = engine.Sprite.FLIP.NONE
 
 ## Sprite sheets
 
-`set_source_rect` selects the part of the texture copied to the destination
-rectangle. Its arguments are the source image's `x`, `y`, `w`, and `h`:
+`source_rect` selects the part of the texture copied to the destination
+rectangle. Its a tuple with 4 float the represent the source image's `x`, `y`, `w`, and `h`:
 
 ```python
-sprite.set_source_rect(32, 0, 32, 32)
+sprite.source_rect = (32, 0, 32, 32)
 sprite.w = 96
 sprite.h = 96
 ```
