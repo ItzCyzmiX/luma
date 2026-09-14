@@ -6,6 +6,9 @@ class DEFAULT_EVENTS_ENUM(Enum):
     KEYPRESS = "keypress"
     KEYUP = "keyup"
     QUIT = "quit"
+    MOUSEPRESS = "mousepress"
+    MOUSEUP = "mouseup"
+    MOUSEMOTION = "mousemotion"
 
 
 class Luma_Event:

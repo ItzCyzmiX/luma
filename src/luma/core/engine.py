@@ -7,13 +7,13 @@ from platform import system
 from luma.core.error import Luma_Error
 from luma.core.event import DEFAULT_EVENTS_ENUM, Luma_EventManager
 from luma.core.graphics import Luma_Graphics
+from luma.core.mouse import Luma_Mouse
 from luma.core.sprite import Luma_SpriteCreator
 from luma.sdl.consts import SDL_BLENDMODE, SDL_EVENT, SDL_INIT
 from luma.sdl.event import SDL_Event
 from luma.sdl.image import SDLImageBindings
 from luma.sdl.keys import KEYS as KEYS_
 from luma.sdl.sdl3 import SDL3Bindings
-from luma.sdl.shapes import SDL_Rect
 
 
 def get_sdl_image_path():
@@ -72,6 +72,7 @@ class Luma:
         self.event_manager = Luma_EventManager()
         self.Sprite = Luma_SpriteCreator(self)
         self.graphics = None
+        self.Mouse = Luma_Mouse(self)
 
         if not self.sdl.init(SDL_INIT.SDL_INIT_VIDEO):
             error_msg = self.sdl.get_error()
@@ -157,6 +158,32 @@ class Luma:
                         self.event_manager.dispatch(
                             Luma.EVENTS.KEYUP, Luma.KEYS(event.key.key)
                         )
+
+                    if (
+                        event.type == SDL_EVENT.SDL_EVENT_MOUSE_DOWN
+                        or event.type == SDL_EVENT.SDL_EVENT_MOUSE_UP
+                    ):
+                        button = ""
+                        try:
+                            button = ["L", "M", "R"][event.button.button - 1]
+                        except IndexError:
+                            pass
+                        self.event_manager.dispatch(
+                            Luma.EVENTS.MOUSEPRESS
+                            if event.type == SDL_EVENT.SDL_EVENT_MOUSE_DOWN
+                            else Luma.EVENTS.MOUSEUP,
+                            button,
+                            (event.button.x, event.button.y),
+                            event.button.clicks,
+                        )
+
+                    if event.type == SDL_EVENT.SDL_EVENT_MOUSE_MOTION:
+                        self.event_manager.dispatch(
+                            Luma.EVENTS.MOUSEMOTION,
+                            (event.motion.x, event.motion.y),
+                            (event.motion.relx, event.motion.rely),
+                        )
+                        self.Mouse._set_pos((event.motion.x, event.motion.y))
 
                 if callable(self._update_method):
                     self._update_method(dt)

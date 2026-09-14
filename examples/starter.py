@@ -48,8 +48,26 @@ def quit():
 def input(key: Luma.KEYS):
     if key == Luma.KEYS.SPACE:
         print("jump")
-        sprite.kill()
-        sprite_2.kill()
+
+
+@engine.on(Luma.EVENTS.MOUSEPRESS)
+def mouse(button: str, pos: tuple[float, float], clicks: int):
+    print(button, pos, clicks)
+
+
+@engine.on(Luma.EVENTS.MOUSEUP)
+def mouse2(button: str, pos: tuple[float, float], clicks: int):
+    print(button, pos, clicks)
+
+
+print(engine.Mouse.get_pos())
+
+print(engine.Mouse.x, engine.Mouse.y)
+
+
+@engine.on(Luma.EVENTS.MOUSEMOTION)
+def mouse3(position, relative_motion):
+    print(position, relative_motion)
 
 
 @engine.update
