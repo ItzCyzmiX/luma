@@ -3,20 +3,24 @@ from typing import TYPE_CHECKING
 
 from luma.sdl.consts import SDL_EVENT
 from luma.sdl.event import SDL_Event
+from luma.sdl.sdl3 import SDL3Bindings
 
 if TYPE_CHECKING:
     from luma.core.engine import Luma
 
 
 class Luma_Mouse:
+    LEFT_BUTTON = "L"
+    RIGHT_BUTTON = "R"
+    MIDDLE_BUTTON = "M"
+
     def __init__(self, sdl: "Luma"):
         self.engine = sdl
         self._x = ctypes.c_float()
         self._y = ctypes.c_float()
-        self.get_pos()
 
     @property
-    def sdl(self):
+    def sdl(self) -> SDL3Bindings:
         return self.engine.sdl
 
     @property

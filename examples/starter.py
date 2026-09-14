@@ -49,8 +49,8 @@ def quit():
 
 
 @engine.on(Luma.EVENTS.KEYPRESS)
-def input(key: Luma.KEYS):
-    if key == Luma.KEYS.SPACE:
+def input(key):
+    if key == Luma.Keyboard.SPACE:
         print("jump")
 
         sprite.kill()
@@ -79,18 +79,18 @@ def mouse3(position, relative_motion):
 
 @engine.update
 def update(dt):
-    if engine.isKeyHeld(Luma.KEYS.D):
+    if engine.isKeyHeld(Luma.Keyboard.D):
         sprite.x += SPRITE_SPEED * dt
         sprite.flip_mode = engine.Sprite.FLIP.VERTICAL
-    elif engine.isKeyHeld(Luma.KEYS.Q):
+    elif engine.isKeyHeld(Luma.Keyboard.Q):
         sprite.x -= SPRITE_SPEED * dt
         sprite.flip_mode = engine.Sprite.FLIP.NONE
-    elif engine.isKeyHeld(Luma.KEYS.S):
+    elif engine.isKeyHeld(Luma.Keyboard.S):
         sprite.y += SPRITE_SPEED * dt
-    elif engine.isKeyHeld(Luma.KEYS.Z):
+    elif engine.isKeyHeld(Luma.Keyboard.Z):
         sprite.y -= SPRITE_SPEED * dt
 
-    if engine.isKeyHeld(Luma.KEYS.R):
+    if engine.isKeyHeld(Luma.Keyboard.R):
         sprite.angle += 1
 
 

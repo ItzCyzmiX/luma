@@ -1,0 +1,81 @@
+name: Build SDL_image
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build SDL_image (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: windows
+          - os: ubuntu-latest
+            artifact: linux
+          - os: macos-latest
+            artifact: macos
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout SDL3
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL
+          path: SDL
+
+      - name: Checkout SDL_image
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL_image
+          path: SDL_image
+          submodules: recursive
+
+      - name: Setup CMake
+        uses: ./.github/actions/setup-cmake
+
+      - name: Configure & build SDL3
+        run: |
+          cmake -S SDL -B build-sdl3 -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_UNIX_CONSOLE_BUILD=ON
+          cmake --build build-sdl3 --config Release
+          cmake --install build-sdl3 --prefix ${{ github.workspace }}/install-sdl3 --config Release
+
+      - name: Configure & build SDL_image
+        run: |
+          cmake -S SDL_image -B build-image -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DSDL3IMAGE_VENDORED=ON -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install-sdl3
+          cmake --build build-image --config Release
+
+      # Windows
+      - name: Prepare Windows binaries
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          mkdir -p output
+          cp build-image/Release/SDL3_image.dll output/SDL3_image.dll
+          cp install-sdl3/bin/SDL3.dll output/SDL3.dll
+
+      # Linux
+      - name: Prepare Linux binaries
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p output
+          cp build-image/libSDL3_image.so output/libSDL3_image.so
+          cp install-sdl3/lib/libSDL3.so* output/
+
+      # macOS
+      - name: Prepare macOS binaries
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p output
+          cp build-image/libSDL3_image.dylib output/libSDL3_image.dylib
+          cp install-sdl3/lib/libSDL3.dylib output/libSDL3.dylib
+
+      - name: Upload SDL_image binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: SDL_image-${{ matrix.artifact }}
+          path: output/

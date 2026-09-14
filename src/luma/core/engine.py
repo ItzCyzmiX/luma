@@ -49,7 +49,7 @@ def get_sdl_path():
 
 
 class Luma:
-    KEYS = KEYS_
+    Keyboard = KEYS_
 
     EVENTS = DEFAULT_EVENTS_ENUM
 

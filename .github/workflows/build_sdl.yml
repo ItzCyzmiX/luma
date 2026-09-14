@@ -29,7 +29,7 @@ jobs:
           path: SDL
 
       - name: Setup CMake
-        uses: lukka/get-cmake@latest
+        uses: ./.github/actions/setup-cmake
 
       - name: Configure SDL3
         run: |

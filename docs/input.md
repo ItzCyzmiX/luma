@@ -1,22 +1,22 @@
 # Input
 
-Luma exposes keyboard input through `Luma.EVENTS` and `Luma.KEYS`.
+Luma exposes keyboard input through `Luma.EVENTS` and `Luma.Keyboard`.
 
 ## Key press and release
 
-`KEYPRESS` receives a `Luma.KEYS` value when a key is initially pressed.
+`KEYPRESS` receives a `Luma.Keyboard` value when a key is initially pressed.
 Holding the key does not repeatedly dispatch `KEYPRESS`.
 
 ```python
 @engine.on(Luma.EVENTS.KEYPRESS)
 def on_key_press(key):
-    if key == Luma.KEYS.SPACE:
+    if key == Luma.Keyboard.SPACE:
         print("jump")
 
 
 @engine.on(Luma.EVENTS.KEYUP)
 def on_key_up(key):
-    if key == Luma.KEYS.SPACE:
+    if key == Luma.Keyboard.SPACE:
         print("space released")
 ```
 
@@ -35,14 +35,14 @@ x = 100.0
 def update(dt):
     global x
 
-    if engine.isKeyHeld(Luma.KEYS.D):
+    if engine.isKeyHeld(Luma.Keyboard.D):
         x += speed * dt
-    if engine.isKeyHeld(Luma.KEYS.A):
+    if engine.isKeyHeld(Luma.Keyboard.A):
         x -= speed * dt
 ```
 
 This tracks the current pressed state separately from press and release
-callbacks. The key is a member of `Luma.KEYS`, not a string.
+callbacks. The key is a member of `Luma.Keyboard`, not a string.
 
 Available event names are `KEYPRESS`, `KEYUP`. The key enum
 contains letters, number keys, punctuation, `SPACE`, `RETURN`, `ESCAPE`,

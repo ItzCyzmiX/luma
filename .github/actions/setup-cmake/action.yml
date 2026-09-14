@@ -1,0 +1,5 @@
+name: Setup CMake
+runs:
+  using: composite
+  steps:
+    - uses: lukka/get-cmake@latest
