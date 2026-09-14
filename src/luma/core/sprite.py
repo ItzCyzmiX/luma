@@ -1,3 +1,4 @@
+from copy import deepcopy
 from enum import Enum
 from typing import TYPE_CHECKING, TypedDict
 
@@ -31,15 +32,9 @@ class Luma_Sprite:
             self.angle,
             self.center_point,
             self.flip_mode,
-        ) = (
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            0.0,
-            None,
-            FLIP_MODE.NONE,
-        )
+            self._alpha,
+            self._color_mod,
+        ) = (0.0, 0.0, 0.0, 0.0, 0.0, None, FLIP_MODE.NONE, 255, (255, 255, 255))
 
         self.dest_rect: tuple[float, float, float, float] = (
             self.x,
@@ -80,6 +75,24 @@ class Luma_Sprite:
 
         return self
 
+    @property
+    def alpha(self):
+        return self._alpha
+
+    @alpha.setter
+    def alpha(self, a: int):
+        self._alpha = a
+        self.sdl.set_texture_alpha(self.texture, self._alpha)
+
+    @property
+    def color_mod(self):
+        return self._color_mod
+
+    @color_mod.setter
+    def color_mod(self, c: tuple[int, int, int]):
+        self._color_mod = c
+        self.sdl.set_texture_color_mod(self.texture, *self._color_mod)
+
     def draw(self):
         if not self.texture:
             return
@@ -96,6 +109,10 @@ class Luma_Sprite:
             if self.center_point is not None
             else None
         )
+
+        self.sdl.set_texture_alpha(self.texture, self._alpha)
+        self.sdl.set_texture_color_mod(self.texture, *self._color_mod)
+
         self.sdl.render_texture(
             self.renderer,
             self.texture,
@@ -105,6 +122,9 @@ class Luma_Sprite:
             center_point,
             self.flip_mode.value,
         )
+
+        self.sdl.set_texture_alpha(self.texture, 255)
+        self.sdl.set_texture_color_mod(self.texture, 255, 255, 255)
 
     @property
     def sdl(self):

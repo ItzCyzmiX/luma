@@ -91,5 +91,19 @@ class SDL3Bindings(NativeBindings):
             [ctypes.POINTER(ctypes.c_float), ctypes.POINTER(ctypes.c_float)],
             ctypes.c_uint32,
         )
-
+        self.set_texture_alpha = self.bind(
+            "SDL_SetTextureAlphaMod",
+            [ctypes.POINTER(SDL_Texture), ctypes.c_uint8],
+            ctypes.c_bool,
+        )
+        self.set_texture_color_mod = self.bind(
+            "SDL_SetTextureColorMod",
+            [
+                ctypes.POINTER(SDL_Texture),
+                ctypes.c_uint8,
+                ctypes.c_uint8,
+                ctypes.c_uint8,
+            ],
+            ctypes.c_bool,
+        )
         self.quit = self.bind("SDL_Quit", [], None)

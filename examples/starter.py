@@ -21,6 +21,8 @@ RECT_X, RECT_Y = 10, 10
 def init_():
     print("initing very important stuff")
     graphics.setBackgroundColor(graphics.COLORS.GREEN)
+    sprite_2.color_mod = (255, 0, 0)
+    sprite_2.alpha = 0
 
 
 @engine.draw
@@ -50,6 +52,9 @@ def quit():
 def input(key: Luma.KEYS):
     if key == Luma.KEYS.SPACE:
         print("jump")
+
+        sprite.kill()
+        sprite_2.kill()
 
 
 @engine.on(Luma.EVENTS.MOUSEPRESS)
