@@ -1,5 +1,5 @@
 from enum import Enum
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypedDict
 
 from luma.core.error import Luma_Error
 from luma.sdl.shapes import SDL_Point, SDL_Rect
@@ -21,6 +21,7 @@ class Luma_Sprite:
         self.engine = engine
         self.img_path: str | None = None
         self.texture: SDL_Texture | None = None
+        self.sprite_creator: Luma_SpriteCreator | None = None
 
         (
             self.x,
@@ -45,16 +46,20 @@ class Luma_Sprite:
 
     def create(
         self,
+        sprite_creator,
         path: str,
         x: float,
         y: float,
+        texture: SDL_Texture,
         w: float | None = None,
         h: float | None = None,
     ):
+        self.sprite_creator = sprite_creator
         self.img_path = path
-        self._load_texture()
+        self.texture = texture
 
         self.x, self.y = x, y
+
         if w is not None:
             self.w = w
         if h is not None:
@@ -65,6 +70,9 @@ class Luma_Sprite:
         return self
 
     def draw(self):
+        if not self.texture:
+            return
+
         self.dest_rect = SDL_Rect(self.x, self.y, self.w, self.h)
         point = (
             SDL_Point(self.center_point[0], self.center_point[1])
@@ -97,28 +105,24 @@ class Luma_Sprite:
         return self.engine.renderer
 
     def set_center_point(self, point: tuple[float, float] | None):
-
         self.center_point = (point[0], point[1]) if point is not None else None
 
-    def _load_texture(self):
-        if self.img_path is None or not self.renderer:
-            return
+    def kill(self):
 
-        surf = self.sdl_image.load(self.img_path.encode())
+        if self.img_path and self.sprite_creator and self.texture:
+            self.sprite_creator.loaded_textures[self.img_path]["ref_count"] -= 1
 
-        self.w = surf.contents.w
-        self.h = surf.contents.h
-        if not surf:
-            error_msg = self.engine.sdl.get_error()
-            raise Luma_Error(error_msg)
+            if self.sprite_creator.loaded_textures[self.img_path]["ref_count"] <= 0:
+                self.sdl.destroy_texture(self.texture)
+                del self.sprite_creator.loaded_textures[self.img_path]
 
-        self.texture = self.sdl.create_texture_from_surface(self.renderer, surf)
+        self.texture = None
 
-        if not self.texture:
-            error_msg = self.engine.sdl.get_error()
-            raise Luma_Error(error_msg)
 
-        self.sdl.destroy_surface(surf)
+class CachedTexture(TypedDict):
+    texture: SDL_Texture
+    dimensions: tuple[float, float]
+    ref_count: int
 
 
 class Luma_SpriteCreator:
@@ -127,6 +131,7 @@ class Luma_SpriteCreator:
 
     def __init__(self, engine: "Luma"):
         self.engine = engine
+        self.loaded_textures: dict[str, CachedTexture] = {}
 
     def create(
         self,
@@ -136,4 +141,47 @@ class Luma_SpriteCreator:
         w: float | None = None,
         h: float | None = None,
     ):
-        return Luma_Sprite(self.engine).create(path, x, y, w, h)
+        texture = self._load_texture(path)
+
+        return Luma_Sprite(self.engine).create(
+            self,
+            path,
+            x,
+            y,
+            texture["texture"],
+            w if w is not None else texture["dimensions"][0],
+            h if h is not None else texture["dimensions"][1],
+        )
+
+    def _load_texture(self, img_path: str) -> CachedTexture:
+
+        if self.loaded_textures.get(img_path, False):
+            self.loaded_textures[img_path]["ref_count"] += 1
+            return self.loaded_textures[img_path]
+
+        surf = self.engine.sdl_image.load(img_path.encode())
+
+        if not surf:
+            error_msg = self.engine.sdl.get_error()
+            raise Luma_Error(error_msg)
+
+        w = surf.contents.w
+        h = surf.contents.h
+
+        texture = self.engine.sdl.create_texture_from_surface(
+            self.engine.renderer, surf
+        )
+
+        if not texture:
+            error_msg = self.engine.sdl.get_error()
+            raise Luma_Error(error_msg)
+
+        self.engine.sdl.destroy_surface(surf)
+
+        self.loaded_textures[img_path] = {
+            "texture": texture.contents,
+            "dimensions": (w, h),
+            "ref_count": 1,
+        }
+
+        return self.loaded_textures[img_path]

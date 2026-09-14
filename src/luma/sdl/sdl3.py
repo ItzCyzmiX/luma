@@ -69,6 +69,9 @@ class SDL3Bindings(NativeBindings):
         self.destroy_surface = self.bind(
             "SDL_DestroySurface", [ctypes.POINTER(SDL_Surface)], None
         )
+        self.destroy_texture = self.bind(
+            "SDL_DestroyTexture", [ctypes.POINTER(SDL_Texture)], None
+        )
         self.render_texture = self.bind(
             "SDL_RenderTextureRotated",
             [

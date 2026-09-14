@@ -3,7 +3,13 @@ from luma import Luma
 engine = Luma()
 
 engine.create_window("aloha", 1280, 720)
-sprite = engine.Sprite.create("examples/Ultron.jpg", 0, 0)
+sprite = engine.Sprite.create(
+    "examples/Ultron.jpg",
+    0,
+    0,
+)
+sprite_2 = engine.Sprite.create(path="examples/Ultron.jpg", x=0, y=0)
+
 graphics = engine.graphics
 
 SPRITE_SPEED = 330.0
@@ -17,7 +23,6 @@ def init_():
 
 @engine.draw
 def draw():
-    sprite.draw()
 
     graphics.setDrawColor(105, 0, 0)
 
@@ -29,6 +34,10 @@ def draw():
 
     graphics.resetDrawColor()
 
+    sprite_2.draw()
+
+    sprite.draw()
+
 
 @engine.on(Luma.EVENTS.QUIT)
 def quit():
@@ -39,6 +48,8 @@ def quit():
 def input(key: Luma.KEYS):
     if key == Luma.KEYS.SPACE:
         print("jump")
+        sprite.kill()
+        sprite_2.kill()
 
 
 @engine.update
