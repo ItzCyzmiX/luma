@@ -1,4 +1,5 @@
 # Luma
+
 Luma Engine is a lightweight Python game engine powered by SDL3
 
 ## Installation
@@ -35,7 +36,7 @@ def update(dt):
 
 @engine.on(Luma.EVENTS.KEYPRESS)
 def on_key_press(key):
-	if key == Luma.KEYS.SPACE:
+	if key == Luma.Keyboard.SPACE:
 		print("Space pressed")
 
 
