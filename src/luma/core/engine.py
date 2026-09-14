@@ -8,6 +8,7 @@ from luma.core.error import Luma_Error
 from luma.core.event import DEFAULT_EVENTS_ENUM, Luma_EventManager
 from luma.core.graphics import Luma_Graphics
 from luma.core.sprite import Luma_SpriteCreator
+from luma.sdl.consts import SDL_BLENDMODE, SDL_EVENT, SDL_INIT
 from luma.sdl.event import SDL_Event
 from luma.sdl.image import SDLImageBindings
 from luma.sdl.keys import KEYS as KEYS_
@@ -48,20 +49,6 @@ def get_sdl_path():
 
 
 class Luma:
-    SDL_INIT_AUDIO = 0x10
-    SDL_INIT_VIDEO = 0x20
-    SDL_INIT_JOYSTICK = 0x200
-    SDL_INIT_HAPTIC = 0x1000
-    SDL_INIT_GAMEPAD = 0x2000
-    SDL_INIT_EVENTS = 0x4000
-    SDL_INIT_SENSOR = 0x8000
-    SDL_INIT_CAMERA = 0x10000
-    SDL_EVENT_QUIT = 0x100
-    SDL_BLENDMODE_BLEND = 0x00000001
-
-    SDL_EVENT_KEY_DOWN = 0x300
-    SDL_EVENT_KEY_UP = 0x301
-
     KEYS = KEYS_
 
     EVENTS = DEFAULT_EVENTS_ENUM
@@ -86,7 +73,7 @@ class Luma:
         self.Sprite = Luma_SpriteCreator(self)
         self.graphics = None
 
-        if not self.sdl.init(Luma.SDL_INIT_VIDEO):
+        if not self.sdl.init(SDL_INIT.SDL_INIT_VIDEO):
             error_msg = self.sdl.get_error()
 
             raise Luma_Error(error_msg)
@@ -109,7 +96,7 @@ class Luma:
             raise Luma_Error(error_msg)
 
         if not self.sdl.set_render_draw_blend_mode(
-            self.renderer, Luma.SDL_BLENDMODE_BLEND
+            self.renderer, SDL_BLENDMODE.SDL_BLENDMODE_BLEND
         ):
             self.quit()
             error_msg = self.sdl.get_error()
@@ -152,11 +139,11 @@ class Luma:
                 event = SDL_Event()
 
                 while self.sdl.poll_event(ctypes.byref(event)):
-                    if event.type == Luma.SDL_EVENT_QUIT:
+                    if event.type == SDL_EVENT.SDL_EVENT_QUIT:
                         self.running = False
                         break
 
-                    if event.type == Luma.SDL_EVENT_KEY_DOWN:
+                    if event.type == SDL_EVENT.SDL_EVENT_KEY_DOWN:
                         if Luma.KEYS(event.key.key) not in self._keys_pressed:
                             self.event_manager.dispatch(
                                 Luma.EVENTS.KEYPRESS, Luma.KEYS(event.key.key)
@@ -164,7 +151,7 @@ class Luma:
 
                         self._keys_pressed.add(Luma.KEYS(event.key.key))
 
-                    if event.type == Luma.SDL_EVENT_KEY_UP:
+                    if event.type == SDL_EVENT.SDL_EVENT_KEY_UP:
                         self._keys_pressed.discard(Luma.KEYS(event.key.key))
 
                         self.event_manager.dispatch(
