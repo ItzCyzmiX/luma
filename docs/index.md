@@ -8,7 +8,7 @@ game state and game rules in ordinary Python code.
 
 - [Getting started](getting-started.md): install Luma and build a first game.
 - [Engine](engine.md): understand windows, callbacks, the frame loop, and
-	shutdown.
+  shutdown.
 - [Input](input.md): respond to key presses, key releases, and held keys.
 - [Graphics](graphics.md): set colors and draw filled or outlined rectangles.
 - [Sprites](sprites.md): load, draw, transform, and crop image textures.
@@ -28,13 +28,13 @@ graphics = engine.graphics
 
 @engine.draw
 def draw():
-		graphics.setDrawColor(40, 120, 220)
-		graphics.drawRect(220, 160, 200, 120)
+   graphics.setDrawColor(40, 120, 220)
+   graphics.drawRect(220, 160, 200, 120)
 
 
 @engine.update
 def update(dt):
-		pass
+	pass
 
 
 engine.run()
@@ -49,4 +49,3 @@ Luma currently provides keyboard and quit events, rectangle rendering, and
 image sprites. It does not yet provide built-in text, audio, collision
 detection, scenes, cameras, or asset management. Those systems can be built in
 Python on top of the engine, as the Pong example demonstrates.
-

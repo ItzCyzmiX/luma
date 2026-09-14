@@ -23,7 +23,7 @@ graphics.setDrawColor(40, 120, 220, 180)
 You can also pass a tuple or list:
 
 ```python
-graphics.setDrawColor(graphics.RED)
+graphics.setDrawColor(graphics.COLORS.RED)
 ```
 
 Built-in colors are `RED`, `GREEN`, `BLUE`, `BLACK`, and `WHITE`. The alpha
@@ -64,5 +64,5 @@ downward.
 
 ## Current rendering surface
 
-The public graphics API currently supports draw colors and rectangles only.
-Textures, sprites, text, fonts, and audio are not part of this API yet.
+The public graphics API currently supports draw colors, rectangles, textures and sprites.
+While text, fonts, and audio are not part of this API yet.
