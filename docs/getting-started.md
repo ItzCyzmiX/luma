@@ -20,7 +20,7 @@ from luma import Luma
 
 engine = Luma()
 engine.create_window("My Luma Game", 640, 480)
-graphics = engine.graphics
+graphics = engine.Graphics
 
 
 @engine.draw

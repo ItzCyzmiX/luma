@@ -1,10 +1,10 @@
 # Graphics
 
 After creating a window, access the renderer wrapper through
-`engine.graphics`:
+`engine.Graphics`:
 
 ```python
-graphics = engine.graphics
+graphics = engine.Graphics
 ```
 
 Graphics calls affect the current draw color and renderer. Put them in the

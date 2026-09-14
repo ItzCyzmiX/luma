@@ -23,7 +23,7 @@ engine.create_window("Title", 800, 600)
 ```
 
 The method takes `title`, `width`, `height`, and an optional SDL window `flags`
-integer. After it succeeds, `engine.graphics` is ready to use.
+integer. After it succeeds, `engine.Graphics` is ready to use.
 
 ## Callbacks
 

@@ -24,7 +24,7 @@ def init_():
 @engine.draw
 def draw():
 
-    graphics.setDrawColor(105, 0, 0)
+    graphics.setDrawColor(graphics.COLORS.RED)
 
     graphics.drawRect(RECT_X, RECT_Y, 100, 100)
 

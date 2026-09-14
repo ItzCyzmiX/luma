@@ -7,14 +7,22 @@ if TYPE_CHECKING:
     from luma.core.engine import Luma
 
 
-class Luma_Graphics:
-    OPAQUE = 255
-    TRANSPARENT = 0
+class Colors:
     RED = (255, 0, 0, 255)
     GREEN = (0, 255, 0, 255)
     BLUE = (0, 0, 255, 255)
     BLACK = (0, 0, 0, 255)
     WHITE = (255, 255, 255, 255)
+
+
+class Alpha:
+    OPAQUE = 255
+    TRANSPARENT = 0
+
+
+class Luma_Graphics:
+    ALPHA = Alpha
+    COLORS = Colors
 
     def __init__(self, sdl: "Luma"):
         self.engine = sdl
