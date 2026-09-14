@@ -126,6 +126,9 @@ class Luma:
         return key in self._keys_pressed
 
     def run(self):
+        if not self.window or not self.renderer or not self.Graphics:
+            return
+
         if callable(self._init_method):
             self._init_method()
 
@@ -144,47 +147,12 @@ class Luma:
                         self.running = False
                         break
 
-                    if event.type == SDL_EVENT.SDL_EVENT_KEY_DOWN:
-                        if Luma.KEYS(event.key.key) not in self._keys_pressed:
-                            self.event_manager.dispatch(
-                                Luma.EVENTS.KEYPRESS, Luma.KEYS(event.key.key)
-                            )
+                    event_func = self.event_manager._events_dispatch_table.get(
+                        event.type
+                    )
 
-                        self._keys_pressed.add(Luma.KEYS(event.key.key))
-
-                    if event.type == SDL_EVENT.SDL_EVENT_KEY_UP:
-                        self._keys_pressed.discard(Luma.KEYS(event.key.key))
-
-                        self.event_manager.dispatch(
-                            Luma.EVENTS.KEYUP, Luma.KEYS(event.key.key)
-                        )
-
-                    if (
-                        event.type == SDL_EVENT.SDL_EVENT_MOUSE_DOWN
-                        or event.type == SDL_EVENT.SDL_EVENT_MOUSE_UP
-                    ):
-                        button = ""
-                        try:
-                            button = ["L", "M", "R"][event.button.button - 1]
-                        except IndexError:
-                            pass
-
-                        self.event_manager.dispatch(
-                            Luma.EVENTS.MOUSEPRESS
-                            if event.type == SDL_EVENT.SDL_EVENT_MOUSE_DOWN
-                            else Luma.EVENTS.MOUSEUP,
-                            button,
-                            (event.button.x, event.button.y),
-                            event.button.clicks,
-                        )
-
-                    if event.type == SDL_EVENT.SDL_EVENT_MOUSE_MOTION:
-                        self.event_manager.dispatch(
-                            Luma.EVENTS.MOUSEMOTION,
-                            (event.motion.x, event.motion.y),
-                            (event.motion.relx, event.motion.rely),
-                        )
-                        self.Mouse._set_pos((event.motion.x, event.motion.y))
+                    if callable(event_func):
+                        event_func(self, event)
 
                 if callable(self._update_method):
                     self._update_method(dt)
@@ -200,10 +168,10 @@ class Luma:
 
                 self.sdl.render_present(self.renderer)
 
-        except Exception as e:
+        except Exception:
             self.quit()
 
-            raise e
+            raise
 
         finally:
             self.quit()

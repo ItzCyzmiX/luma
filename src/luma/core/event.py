@@ -1,6 +1,10 @@
 from collections.abc import Callable
 from enum import Enum
 
+from luma.core.keyboard import key_down, key_up
+from luma.core.mouse import mouse_down_and_up, mouse_motion
+from luma.sdl.consts import SDL_EVENT
+
 
 class DEFAULT_EVENTS_ENUM(Enum):
     KEYPRESS = "keypress"
@@ -29,6 +33,13 @@ class Luma_Event:
 class Luma_EventManager:
     def __init__(self):
         self._events = {}
+        self._events_dispatch_table = {
+            SDL_EVENT.SDL_EVENT_KEY_DOWN: key_down,
+            SDL_EVENT.SDL_EVENT_KEY_UP: key_up,
+            SDL_EVENT.SDL_EVENT_MOUSE_DOWN: mouse_down_and_up,
+            SDL_EVENT.SDL_EVENT_MOUSE_UP: mouse_down_and_up,
+            SDL_EVENT.SDL_EVENT_MOUSE_MOTION: mouse_motion,
+        }
 
     def new_event_callback(self, name: DEFAULT_EVENTS_ENUM, callback_: Callable):
         if self._events.get(name):

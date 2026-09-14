@@ -1,6 +1,9 @@
 import ctypes
 from typing import TYPE_CHECKING
 
+from luma.sdl.consts import SDL_EVENT
+from luma.sdl.event import SDL_Event
+
 if TYPE_CHECKING:
     from luma.core.engine import Luma
 
@@ -29,3 +32,33 @@ class Luma_Mouse:
 
     def _set_pos(self, pos):
         self._x, self._y = ctypes.c_float(pos[0]), ctypes.c_float(pos[1])
+
+
+def mouse_down_and_up(luma: "Luma", event: SDL_Event):
+    from luma.core.event import DEFAULT_EVENTS_ENUM
+
+    button = ""
+    try:
+        button = ["L", "M", "R"][event.button.button - 1]
+    except IndexError:
+        pass
+
+    luma.event_manager.dispatch(
+        DEFAULT_EVENTS_ENUM.MOUSEPRESS
+        if event.type == SDL_EVENT.SDL_EVENT_MOUSE_DOWN
+        else DEFAULT_EVENTS_ENUM.MOUSEUP,
+        button,
+        (event.button.x, event.button.y),
+        event.button.clicks,
+    )
+
+
+def mouse_motion(luma: "Luma", event: SDL_Event):
+    from luma.core.event import DEFAULT_EVENTS_ENUM
+
+    luma.event_manager.dispatch(
+        DEFAULT_EVENTS_ENUM.MOUSEMOTION,
+        (event.motion.x, event.motion.y),
+        (event.motion.relx, event.motion.rely),
+    )
+    luma.Mouse._set_pos((event.motion.x, event.motion.y))

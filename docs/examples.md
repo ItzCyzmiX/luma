@@ -23,15 +23,5 @@ python examples/pong.py
 movement, a simple AI opponent, rectangle collision checks, scoring, and reset
 logic.
 
-## Object-oriented Pong
-
-```bash
-python examples/pong_oop.py
-```
-
-`pong_oop.py` organizes the same style of game around `Paddle`, `Ball`, and
-`Game` classes. Use it as a starting point when a larger game needs clearer
-ownership of state.
-
 All gameplay rules in these examples are ordinary Python. Luma supplies the
 window, event loop, timing value, and drawing primitives.
