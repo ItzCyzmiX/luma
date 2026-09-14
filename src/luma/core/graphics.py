@@ -6,6 +6,8 @@ from luma.sdl.shapes import SDL_Rect
 if TYPE_CHECKING:
     from luma.core.engine import Luma
 
+import math
+
 
 class Colors:
     RED = (255, 0, 0, 255)
@@ -72,3 +74,59 @@ class Luma_Graphics:
             if not self.sdl.render_rect(self.renderer, SDL_Rect(x, y, w, h)):
                 error_msg = self.sdl.get_error()
                 raise Luma_Error(error_msg)
+
+    def drawPoint(self, x: float, y: float):
+        if not self.sdl.render_point(self.renderer, x, y):
+            error_msg = self.sdl.get_error()
+            raise Luma_Error(error_msg)
+
+    def drawLine(self, x1: float, y1: float, x2: float, y2: float):
+        if not self.sdl.render_line(self.renderer, x1, y1, x2, y2):
+            error_msg = self.sdl.get_error()
+            raise Luma_Error(error_msg)
+
+    def drawCircle(
+        self, center_x: float, center_y: float, radius: float, filled: bool = True
+    ):
+        if filled:
+            self._drawFilledCircle(center_x, center_y, radius)
+        else:
+            self._drawLineCircle(center_x, center_y, radius)
+
+    def _drawFilledCircle(self, center_x: float, center_y: float, radius: float):
+        for y in range(int(-radius), int(radius)):
+            dx = math.sqrt(radius * radius - y * y)
+            if not self.sdl.render_line(
+                self.renderer, center_x - dx, center_y + y, center_x + dx, center_y + y
+            ):
+                error_msg = self.sdl.get_error()
+                raise Luma_Error(error_msg)
+
+    def _drawLineCircle(self, center_x: float, center_y: float, radius: float):
+        x = radius
+        y = 0
+        err = 0
+
+        while x >= y:
+            if not any(
+                [
+                    self.sdl.render_point(self.renderer, center_x + x, center_y + y),
+                    self.sdl.render_point(self.renderer, center_x + y, center_y + x),
+                    self.sdl.render_point(self.renderer, center_x - y, center_y + x),
+                    self.sdl.render_point(self.renderer, center_x - x, center_y + y),
+                    self.sdl.render_point(self.renderer, center_x - x, center_y - y),
+                    self.sdl.render_point(self.renderer, center_x - y, center_y - x),
+                    self.sdl.render_point(self.renderer, center_x + y, center_y - x),
+                    self.sdl.render_point(self.renderer, center_x + x, center_y - y),
+                ]
+            ):
+                error_msg = self.sdl.get_error()
+                raise Luma_Error(error_msg)
+
+            if err <= 0:
+                y += 1
+                err += 2 * y + 1
+
+            if err > 0:
+                x -= 1
+                err -= 2 * x + 1

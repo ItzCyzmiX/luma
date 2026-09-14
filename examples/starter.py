@@ -36,11 +36,17 @@ def draw():
 
     graphics.drawRect(RECT_X + 30, RECT_Y + 20, 100, 100)
 
-    graphics.resetDrawColor()
-
     sprite_2.draw()
 
     sprite.draw()
+    graphics.setDrawColor(graphics.COLORS.WHITE)
+    graphics.drawLine(0, 0, 100, 100)
+
+    graphics.drawCircle(100, 100, 30, False)
+
+    graphics.drawPoint(0, 0)
+
+    graphics.resetDrawColor()
 
 
 @engine.on(Luma.EVENTS.QUIT)

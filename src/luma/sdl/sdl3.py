@@ -61,6 +61,29 @@ class SDL3Bindings(NativeBindings):
             [ctypes.c_void_p, ctypes.POINTER(SDL_Rect)],
             ctypes.c_bool,
         )
+
+        self.render_line = self.bind(
+            "SDL_RenderLine",
+            [
+                ctypes.c_void_p,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+                ctypes.c_float,
+            ],
+            ctypes.c_bool,
+        )
+
+        self.render_point = self.bind(
+            "SDL_RenderPoint",
+            [
+                ctypes.c_void_p,
+                ctypes.c_float,
+                ctypes.c_float,
+            ],
+            ctypes.c_bool,
+        )
+
         self.create_texture_from_surface = self.bind(
             "SDL_CreateTextureFromSurface",
             [ctypes.c_void_p, ctypes.POINTER(SDL_Surface)],
