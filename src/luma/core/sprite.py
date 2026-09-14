@@ -1,8 +1,8 @@
-from copy import deepcopy
 from enum import Enum
 from typing import TYPE_CHECKING, TypedDict
 
 from luma.core.error import Luma_Error
+from luma.sdl.consts import SDL_BLENDMODE
 from luma.sdl.shapes import SDL_Point, SDL_Rect
 from luma.sdl.texture import SDL_Texture
 
@@ -73,6 +73,8 @@ class Luma_Sprite:
         )
         self.source_rect = (0, 0, self.w, self.h)
 
+        self.sdl.set_texture_blendmode(self.texture, SDL_BLENDMODE.SDL_BLENDMODE_BLEND)
+
         return self
 
     @property
@@ -82,7 +84,8 @@ class Luma_Sprite:
     @alpha.setter
     def alpha(self, a: int):
         self._alpha = a
-        self.sdl.set_texture_alpha(self.texture, self._alpha)
+
+        # self.sdl.set_texture_alpha(self.texture, self._alpha)
 
     @property
     def color_mod(self):
@@ -91,7 +94,7 @@ class Luma_Sprite:
     @color_mod.setter
     def color_mod(self, c: tuple[int, int, int]):
         self._color_mod = c
-        self.sdl.set_texture_color_mod(self.texture, *self._color_mod)
+        # self.sdl.set_texture_color_mod(self.texture, *self._color_mod)
 
     def draw(self):
         if not self.texture:

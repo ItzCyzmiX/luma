@@ -22,7 +22,7 @@ def init_():
     print("initing very important stuff")
     graphics.setBackgroundColor(graphics.COLORS.GREEN)
     sprite_2.color_mod = (255, 0, 0)
-    sprite_2.alpha = 0
+    sprite.alpha = 100
 
 
 @engine.draw

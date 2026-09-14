@@ -106,4 +106,11 @@ class SDL3Bindings(NativeBindings):
             ],
             ctypes.c_bool,
         )
+
+        self.set_texture_blendmode = self.bind(
+            "SDL_SetTextureBlendMode",
+            [ctypes.POINTER(SDL_Texture), ctypes.c_uint32],
+            ctypes.c_bool,
+        )
+
         self.quit = self.bind("SDL_Quit", [], None)
