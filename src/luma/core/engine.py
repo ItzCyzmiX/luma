@@ -103,7 +103,7 @@ class Luma:
             error_msg = self.sdl.get_error()
             raise Luma_Error(error_msg)
 
-        self.graphics = Luma_Graphics(self)
+        self.Graphics = Luma_Graphics(self)
 
     def start(self, fn: Callable):
         self._init_method = fn
