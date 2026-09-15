@@ -16,7 +16,7 @@ def get_sdl_path() -> str:
     elif system() == "Darwin":
         lib_ext = "dylib"
 
-    return os.path.join(base, "..", "lib", f"SDL3.{lib_ext}")
+    return os.path.join(base, f"src/luma/lib/SDL3.{lib_ext}")
 
 
 def get_sdl_image_path() -> str:
@@ -32,4 +32,4 @@ def get_sdl_image_path() -> str:
     elif system() == "Darwin":
         lib_ext = "dylib"
 
-    return os.path.join(base, "..", "lib", f"SDL3_image.{lib_ext}")
+    return os.path.join(base, f"src/luma/lib/SDL3_image.{lib_ext}")
