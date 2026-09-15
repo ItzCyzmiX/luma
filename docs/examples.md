@@ -49,6 +49,16 @@ python examples/spritesheet.py
 `source_rect`. Luma uses a regular sprite for spritesheet frames; it does not
 require a separate spritesheet class.
 
+## Fonts
+
+```bash
+python examples/font.py
+```
+
+`font.py` demonstrates loading a TTF font, creating text objects with
+`engine.Font.open(...)` and `font.write(...)`, and updating drawable text each
+frame. It also shows changing text content and position at runtime.
+
 ## Starter
 
 ```bash

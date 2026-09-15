@@ -98,5 +98,5 @@ current draw color, just like the other primitive shapes.
 
 ## Current rendering surface
 
-The public graphics API currently supports draw colors, primitive shapes,
-textures, and sprites. Text, fonts, and audio are not part of this API yet.
+The public graphics API supports draw colors, primitive shapes, textures,
+and sprites. Audio remains outside the core graphics API.

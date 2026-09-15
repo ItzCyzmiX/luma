@@ -12,8 +12,9 @@ immediate-mode primitive shape drawing and image sprites.
   shutdown.
 - [Input](input.md): respond to key presses, key releases, and held keys.
 - [Graphics](graphics.md): set colors and draw primitive shapes, textures, and sprites.
+- [Fonts and text](font.md): load TTF fonts, create drawable text, and update it at runtime.
 - [Sprites](sprites.md): load, draw, transform, and crop image textures.
-- [Examples](examples.md): run the included starter and Pong programs.
+- [Examples](examples.md): run the included starter, font, and Pong programs.
 - [API reference](api.md): signatures, constants, and supported behavior.
 
 ## Smallest useful program
@@ -47,6 +48,6 @@ input-driven example.
 ## Scope
 
 Luma currently provides keyboard and quit events, primitive shape rendering,
-and image sprites. It does not yet provide built-in text, audio, collision
-detection, scenes, cameras, or asset management. Those systems can be built in
-Python on top of the engine, as the Pong example demonstrates.
+image sprites, and TTF text rendering. It does not yet provide built-in audio,
+collision detection, scenes, cameras, or asset management. Those systems can
+be built in Python on top of the engine, as the Pong example demonstrates.

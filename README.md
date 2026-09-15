@@ -51,7 +51,11 @@ python main.py
 
 ## Examples
 
-The repository includes complete examples in the [`examples`](examples) directory, including a Pong game:
+The repository includes complete examples in the [`examples`](examples) directory, including a font demo and a Pong game:
+
+```bash
+python examples/font.py
+```
 
 ```bash
 python examples/pong.py
