@@ -47,9 +47,23 @@ receives `dt`, elapsed seconds since the previous frame.
 
 Returns a decorator for registering an event callback. See [Input](input.md).
 
-### `isKeyHeld(key: Luma.KEYS) -> bool`
+## `Luma.Keyboard`
+
+### `isKeyHeld(key) -> bool`
 
 Returns whether a key is currently pressed.
+
+### `isAnyPressed() -> bool`
+
+Returns whether at least one key is currently pressed.
+
+### `currentPressed() -> set`
+
+Returns the set of currently pressed keys.
+
+### `keyToKeyCode(name: str)`
+
+Converts a key name, such as `"a"`, to its corresponding keyboard value.
 
 ### `run()`
 
@@ -111,7 +125,18 @@ Sets the RGBA color used to clear the renderer before each draw callback.
 ## `Luma.Mouse`
 
 `engine.Mouse.x` and `engine.Mouse.y` expose the latest mouse position from a
-motion event. `engine.Mouse.get_pos()` queries SDL and returns `(x, y)`.
+motion event. `engine.Mouse.get_pos()` returns `(x, y)`.
+
+`LEFT_BUTTON`, `MIDDLE_BUTTON`, and `RIGHT_BUTTON` are the button constants
+`"L"`, `"M"`, and `"R"`.
+
+### `isButtonHeld(button: Literal["L", "M", "R"]) -> bool`
+
+Returns whether a primary mouse button is currently held.
+
+### `currentPressed() -> set[str]`
+
+Returns the set of currently held primary mouse buttons.
 
 ## Sprite properties
 

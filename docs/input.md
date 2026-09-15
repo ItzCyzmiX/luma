@@ -24,7 +24,7 @@ Multiple callbacks can be registered for the same event.
 
 ## Held keys
 
-Use `engine.isKeyHeld(key)` inside `update` for continuous movement:
+Use `engine.Keyboard.isKeyHeld(key)` inside `update` for continuous movement:
 
 ```python
 speed = 300.0
@@ -43,6 +43,11 @@ def update(dt):
 
 This tracks the current pressed state separately from press and release
 callbacks. The key is a member of `Luma.Keyboard`, not a string.
+
+`engine.Keyboard.isAnyPressed()` reports whether at least one key is held.
+`engine.Keyboard.currentPressed()` returns the set of currently held
+keyboard values. `engine.Keyboard.keyToKeyCode(name)` converts a key name such
+as `"a"` to its corresponding keyboard value.
 
 Available event names are `KEYPRESS`, `KEYUP`. The key enum
 contains letters, number keys, punctuation, `SPACE`, `RETURN`, `ESCAPE`,
@@ -64,5 +69,11 @@ def on_mouse_motion(position, relative):
 ```
 
 `button` is `"L"`, `"M"`, or `"R"` for the primary three buttons, or an
-empty string for another button. `engine.Mouse.x` and `engine.Mouse.y` track
-the latest motion position; `engine.Mouse.get_pos()` queries SDL.
+empty string for another button. The same arguments are sent for `MOUSEUP`.
+Use `engine.Mouse.LEFT_BUTTON`, `engine.Mouse.MIDDLE_BUTTON`, and
+`engine.Mouse.RIGHT_BUTTON` for the named button values.
+
+`engine.Mouse.isButtonHeld(button)` reports whether a primary button is held,
+and `engine.Mouse.currentPressed()` returns the set of held button values.
+`engine.Mouse.x` and `engine.Mouse.y` track the latest motion position;
+`engine.Mouse.get_pos()` returns the same position as `(x, y)`.

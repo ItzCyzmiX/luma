@@ -15,7 +15,7 @@ graphics.setBackgroundColor(18, 24, 30)
 
 @engine.start
 def init():
-    print(engine.Keyboard.keyToKeyCode("a"))
+    print("A key:", engine.Keyboard.keyToKeyCode("a"))
 
 
 @engine.draw
@@ -39,6 +39,10 @@ def update(dt):
         player_y -= player_speed * dt
     if engine.Keyboard.isKeyHeld(engine.Keyboard.S):
         player_y += player_speed * dt
+
+    if engine.Mouse.isButtonHeld(engine.Mouse.LEFT_BUTTON):
+        player_x = engine.Mouse.x - 20
+        player_y = engine.Mouse.y - 20
 
 
 @engine.on(Luma.EVENTS.KEYPRESS)
