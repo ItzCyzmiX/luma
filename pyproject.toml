@@ -2,9 +2,19 @@
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["luma*"]
+
+[tool.setuptools.package-data]
+luma = ["lib/*.dll", "lib/*.so", "lib/*.dylib"]
 
 [project]
-version = "0.1.5"
+version = "0.1.9"
 name = "luma-engine"
 requires-python = ">=3.10"
 description = "A lightweight python game engine powered by SDL3"

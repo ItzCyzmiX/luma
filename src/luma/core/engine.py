@@ -1,5 +1,8 @@
 import ctypes
+import os
+import sys
 from collections.abc import Callable
+from platform import system
 
 from luma.core.error import Luma_Error
 from luma.core.event import DEFAULT_EVENTS_ENUM, Luma_EventManager
@@ -20,6 +23,9 @@ class Luma:
     def __init__(self, sdl_path: str | None = None, sdl_image_path: str | None = None):
         self.window = None
         self.renderer = None
+
+        if getattr(sys, "frozen", False) and system() == "Windows":
+            os.add_dll_directory(os.path.join(sys._MEIPASS, "luma", "lib"))
 
         self.sdl_path = sdl_path or get_sdl_path()
         self.sdl_image_path = sdl_image_path or get_sdl_image_path()
@@ -130,7 +136,6 @@ class Luma:
 
         except Exception:
             self._cleanup()
-
             raise
 
         finally:
