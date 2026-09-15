@@ -38,6 +38,12 @@ jobs:
       - name: Setup CMake
         uses: ./.github/actions/setup-cmake
 
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libfreetype6-dev
+
       - name: Configure & build SDL3
         run: |
           cmake -S SDL -B build-sdl3 -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_UNIX_CONSOLE_BUILD=ON
