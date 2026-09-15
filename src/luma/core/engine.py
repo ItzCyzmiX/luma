@@ -1,56 +1,20 @@
 import ctypes
-import os
-import sys
 from collections.abc import Callable
-from platform import system
 
 from luma.core.error import Luma_Error
 from luma.core.event import DEFAULT_EVENTS_ENUM, Luma_EventManager
 from luma.core.graphics import Luma_Graphics
+from luma.core.keyboard import Luma_Keyboard
 from luma.core.mouse import Luma_Mouse
 from luma.core.sprite import Luma_SpriteCreator
+from luma.core.utils import get_sdl_image_path, get_sdl_path
 from luma.sdl.consts import SDL_BLENDMODE, SDL_EVENT, SDL_INIT
 from luma.sdl.event import SDL_Event
 from luma.sdl.image import SDLImageBindings
-from luma.sdl.keys import KEYS as KEYS_
 from luma.sdl.sdl3 import SDL3Bindings
 
 
-def get_sdl_image_path():
-    if getattr(sys, "frozen", False):
-        base = sys._MEIPASS  # type: ignore
-    else:
-        base = os.path.dirname(__file__)
-
-    lib_ext = "dll"
-
-    if system() == "Linux":
-        lib_ext = "so"
-    elif system() == "Darwin":
-        lib_ext = "dylib"
-
-    return os.path.join(base, "..", "lib", f"SDL3_image.{lib_ext}")
-
-
-def get_sdl_path():
-    if getattr(sys, "frozen", False):
-        base = sys._MEIPASS  # type: ignore
-    else:
-        base = os.path.dirname(__file__)
-
-    lib_ext = "dll"
-
-    if system() == "Linux":
-        lib_ext = "so"
-    elif system() == "Darwin":
-        lib_ext = "dylib"
-
-    return os.path.join(base, "..", "lib", f"SDL3.{lib_ext}")
-
-
 class Luma:
-    Keyboard = KEYS_
-
     EVENTS = DEFAULT_EVENTS_ENUM
 
     def __init__(self, sdl_path: str | None = None, sdl_image_path: str | None = None):
@@ -67,12 +31,12 @@ class Luma:
         self._draw_method = None
         self._update_method = None
         self._init_method = None
-        self._keys_pressed: set[KEYS_] = set()
 
         self.event_manager = Luma_EventManager()
         self.Sprite = Luma_SpriteCreator(self)
         self.Graphics = None
         self.Mouse = Luma_Mouse(self)
+        self.Keyboard = Luma_Keyboard(self)
 
         if not self.sdl.init(SDL_INIT.SDL_INIT_VIDEO):
             error_msg = self.sdl.get_error()
@@ -121,10 +85,6 @@ class Luma:
 
         return decorator
 
-    def isKeyHeld(self, key: KEYS_):
-
-        return key in self._keys_pressed
-
     def run(self):
         if not self.window or not self.renderer or not self.Graphics:
             return
@@ -169,19 +129,24 @@ class Luma:
                 self.sdl.render_present(self.renderer)
 
         except Exception:
-            self.quit()
+            self._cleanup()
 
             raise
 
         finally:
-            self.quit()
+            self._cleanup()
 
     def quit(self):
+        self.running = False
+
+    def _cleanup(self):
+        self.event_manager.dispatch(Luma.EVENTS.QUIT)
+
+        self.running = False
+
         if self.renderer:
             self.sdl.destroy_renderer(self.renderer)
         if self.window:
             self.sdl.destroy_window(self.window)
 
         self.sdl.quit()
-
-        self.event_manager.dispatch(Luma.EVENTS.QUIT)

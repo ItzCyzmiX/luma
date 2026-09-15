@@ -23,6 +23,7 @@ class Luma_Sprite:
         self.img_path: str | None = None
         self.texture: SDL_Texture | None = None
         self.sprite_creator: Luma_SpriteCreator | None = None
+        self.is_alive = True
 
         (
             self.x,
@@ -96,20 +97,14 @@ class Luma_Sprite:
         # self.sdl.set_texture_color_mod(self.texture, *self._color_mod)
 
     def draw(self):
-        if not self.texture:
+        if not self.texture or not self.is_alive:
             return
 
         dest_rect = SDL_Rect(self.x, self.y, self.w, self.h)
-        source_rect = SDL_Rect(
-            self.source_rect[0],
-            self.source_rect[1],
-            self.source_rect[2],
-            self.source_rect[3],
-        )
+        source_rect = SDL_Rect(*self.source_rect)
+
         center_point = (
-            SDL_Point(self.center_point[0], self.center_point[1])
-            if self.center_point is not None
-            else None
+            SDL_Point(*self.center_point) if self.center_point is not None else None
         )
 
         self.sdl.set_texture_alpha(self.texture, self._alpha)
@@ -152,6 +147,10 @@ class Luma_Sprite:
                 del self.sprite_creator.loaded_textures[self.img_path]
 
         self.texture = None
+        self.is_alive = False
+
+    def isAlive(self):
+        return self.is_alive
 
 
 class CachedTexture(TypedDict):

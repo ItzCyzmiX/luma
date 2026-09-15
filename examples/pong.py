@@ -10,10 +10,10 @@ class Paddle:
         self.speed = speed
 
     def update(self, dt, up, down):
-        if engine.isKeyHeld(up):
+        if engine.Keyboard.isKeyHeld(up):
             self.y -= self.speed * dt
 
-        if engine.isKeyHeld(down):
+        if engine.Keyboard.isKeyHeld(down):
             self.y += self.speed * dt
 
         # Keep inside screen
@@ -73,7 +73,7 @@ class Game:
 
     def update(self, dt):
         # Player
-        self.player.update(dt, Luma.Keyboard.Z, Luma.Keyboard.S)
+        self.player.update(dt, engine.Keyboard.Z, engine.Keyboard.S)
 
         # Simple AI
         ball_center = self.ball.y + self.ball.size / 2

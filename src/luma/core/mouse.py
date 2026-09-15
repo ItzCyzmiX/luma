@@ -1,5 +1,5 @@
 import ctypes
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from luma.sdl.consts import SDL_EVENT
 from luma.sdl.event import SDL_Event
@@ -18,6 +18,7 @@ class Luma_Mouse:
         self.engine = sdl
         self._x = ctypes.c_float()
         self._y = ctypes.c_float()
+        self._buttons_held: set[Literal["L", "M", "R"]] = set()
 
     @property
     def sdl(self) -> SDL3Bindings:
@@ -37,6 +38,12 @@ class Luma_Mouse:
     def _set_pos(self, pos):
         self._x, self._y = ctypes.c_float(pos[0]), ctypes.c_float(pos[1])
 
+    def isButtonHeld(self, button: Literal["L", "M", "R"]):
+        return button in self._buttons_held
+
+    def currentPressed(self):
+        return self._buttons_held
+
 
 def mouse_down_and_up(luma: "Luma", event: SDL_Event):
     from luma.core.event import DEFAULT_EVENTS_ENUM
@@ -44,6 +51,10 @@ def mouse_down_and_up(luma: "Luma", event: SDL_Event):
     button = ""
     try:
         button = ["L", "M", "R"][event.button.button - 1]
+        if event.type == SDL_EVENT.SDL_EVENT_MOUSE_DOWN:
+            luma.Mouse._buttons_held.add(button)
+        else:
+            luma.Mouse._buttons_held.discard(button)
     except IndexError:
         pass
 

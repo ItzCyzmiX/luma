@@ -136,4 +136,8 @@ class SDL3Bindings(NativeBindings):
             ctypes.c_bool,
         )
 
+        self.get_keycode_from_name = self.bind(
+            "SDL_GetKeyFromName", [ctypes.c_char_p], ctypes.c_uint32
+        )
+
         self.quit = self.bind("SDL_Quit", [], None)

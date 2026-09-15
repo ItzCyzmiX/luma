@@ -35,9 +35,9 @@ x = 100.0
 def update(dt):
     global x
 
-    if engine.isKeyHeld(Luma.Keyboard.D):
+    if engine.Keyboard.isKeyHeld(Luma.Keyboard.D):
         x += speed * dt
-    if engine.isKeyHeld(Luma.Keyboard.A):
+    if engine.Keyboard.isKeyHeld(Luma.Keyboard.A):
         x -= speed * dt
 ```
 

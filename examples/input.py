@@ -13,6 +13,11 @@ last_mouse_event = "Move the mouse or click a button"
 graphics.setBackgroundColor(18, 24, 30)
 
 
+@engine.start
+def init():
+    print(engine.Keyboard.keyToKeyCode("a"))
+
+
 @engine.draw
 def draw():
     graphics.setDrawColor(graphics.COLORS.GREEN)
@@ -26,13 +31,13 @@ def draw():
 def update(dt):
     global player_x, player_y
 
-    if engine.isKeyHeld(Luma.Keyboard.A):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.A):
         player_x -= player_speed * dt
-    if engine.isKeyHeld(Luma.Keyboard.D):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.D):
         player_x += player_speed * dt
-    if engine.isKeyHeld(Luma.Keyboard.W):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.W):
         player_y -= player_speed * dt
-    if engine.isKeyHeld(Luma.Keyboard.S):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.S):
         player_y += player_speed * dt
 
 
@@ -40,8 +45,8 @@ def update(dt):
 def on_key_press(key):
     global last_key
     last_key = f"Pressed: {key.name}"
-    if key == Luma.Keyboard.ESCAPE:
-        engine.running = False
+    if key == engine.Keyboard.ESCAPE:
+        engine.quit()
 
 
 @engine.on(Luma.EVENTS.KEYUP)
