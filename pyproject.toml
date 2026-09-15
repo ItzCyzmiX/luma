@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 
 [project]
-version = "0.1.3"
+version = "0.1.4"
 name = "luma-engine"
 requires-python = ">=3.10"
 description = "A lightweight python game engine powered by SDL3"
