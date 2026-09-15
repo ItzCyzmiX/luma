@@ -53,6 +53,19 @@ class SDL3Bindings(NativeBindings):
             ],
             ctypes.c_bool,
         )
+
+        self.get_render_draw_color = self.bind(
+            "SDL_GetRenderDrawColor",
+            [
+                ctypes.c_void_p,
+                ctypes.POINTER(ctypes.c_uint8),
+                ctypes.POINTER(ctypes.c_uint8),
+                ctypes.POINTER(ctypes.c_uint8),
+                ctypes.POINTER(ctypes.c_uint8),
+            ],
+            ctypes.c_bool,
+        )
+
         self.render_rect = self.bind(
             "SDL_RenderRect", [ctypes.c_void_p, ctypes.POINTER(SDL_Rect)], ctypes.c_bool
         )

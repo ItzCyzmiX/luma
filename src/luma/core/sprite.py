@@ -23,7 +23,6 @@ class Luma_Sprite:
         self.img_path: str | None = None
         self.texture: SDL_Texture | None = None
         self.sprite_creator: Luma_SpriteCreator | None = None
-        self.is_alive = True
 
         (
             self.x,
@@ -58,6 +57,11 @@ class Luma_Sprite:
         self.sprite_creator = sprite_creator
         self.img_path = path
         self.texture = texture
+        self.is_alive = True
+        self.center_point = None
+        self._alpha = 255
+        self._color_mod = (255, 255, 255)
+        self.flip_mode = FLIP_MODE.NONE
 
         self.x, self.y = x, y
 

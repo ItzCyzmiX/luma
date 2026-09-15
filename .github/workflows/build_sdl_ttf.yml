@@ -1,0 +1,81 @@
+name: Build SDL_ttf
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build SDL_ttf (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: windows
+          - os: ubuntu-latest
+            artifact: linux
+          - os: macos-latest
+            artifact: macos
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout SDL3
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL
+          path: SDL
+
+      - name: Checkout SDL_ttf
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL_ttf
+          path: SDL_ttf
+          submodules: recursive
+
+      - name: Setup CMake
+        uses: ./.github/actions/setup-cmake
+
+      - name: Configure & build SDL3
+        run: |
+          cmake -S SDL -B build-sdl3 -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_UNIX_CONSOLE_BUILD=ON
+          cmake --build build-sdl3 --config Release
+          cmake --install build-sdl3 --prefix ${{ github.workspace }}/install-sdl3 --config Release
+
+      - name: Configure & build SDL_ttf
+        run: |
+          cmake -S SDL_ttf -B build-ttf -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DSDL3TTF_VENDORED=ON -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install-sdl3
+          cmake --build build-ttf --config Release
+
+      # Windows
+      - name: Prepare Windows binaries
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          mkdir -p output
+          cp build-ttf/Release/SDL3_ttf.dll output/SDL3_ttf.dll
+          cp install-sdl3/bin/SDL3.dll output/SDL3.dll
+
+      # Linux
+      - name: Prepare Linux binaries
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p output
+          cp build-ttf/libSDL3_ttf.so output/libSDL3_ttf.so
+          cp install-sdl3/lib/libSDL3.so* output/
+
+      # macOS
+      - name: Prepare macOS binaries
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p output
+          cp build-ttf/libSDL3_ttf.dylib output/libSDL3_ttf.dylib
+          cp install-sdl3/lib/libSDL3.dylib output/libSDL3.dylib
+
+      - name: Upload SDL_ttf binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: SDL_ttf-${{ matrix.artifact }}
+          path: output/

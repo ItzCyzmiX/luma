@@ -6,13 +6,15 @@ from platform import system
 
 from luma.core.error import Luma_Error
 from luma.core.event import DEFAULT_EVENTS_ENUM, Luma_EventManager
+from luma.core.font import Luma_Font, Luma_Text
 from luma.core.graphics import Luma_Graphics
 from luma.core.keyboard import Luma_Keyboard
 from luma.core.mouse import Luma_Mouse
 from luma.core.sprite import Luma_SpriteCreator
-from luma.core.utils import get_sdl_image_path, get_sdl_path
+from luma.core.utils import get_sdl_image_path, get_sdl_path, get_sdl_ttf_path
 from luma.sdl.consts import SDL_BLENDMODE, SDL_EVENT, SDL_INIT
 from luma.sdl.event import SDL_Event
+from luma.sdl.font import SDLTTFBindings
 from luma.sdl.image import SDLImageBindings
 from luma.sdl.sdl3 import SDL3Bindings
 
@@ -20,7 +22,12 @@ from luma.sdl.sdl3 import SDL3Bindings
 class Luma:
     EVENTS = DEFAULT_EVENTS_ENUM
 
-    def __init__(self, sdl_path: str | None = None, sdl_image_path: str | None = None):
+    def __init__(
+        self,
+        sdl_path: str | None = None,
+        sdl_image_path: str | None = None,
+        sdl_ttf_path: str | None = None,
+    ):
         self.window = None
         self.renderer = None
 
@@ -29,8 +36,10 @@ class Luma:
 
         self.sdl_path = sdl_path or get_sdl_path()
         self.sdl_image_path = sdl_image_path or get_sdl_image_path()
+        self.sdl_font_path = sdl_ttf_path or get_sdl_ttf_path()
         self.sdl = SDL3Bindings(ctypes.CDLL(self.sdl_path))
         self.sdl_image = SDLImageBindings(ctypes.CDLL(self.sdl_image_path))
+        self.sdl_ttf = SDLTTFBindings(ctypes.CDLL(self.sdl_font_path))
 
         self.running = True
 
@@ -39,10 +48,9 @@ class Luma:
         self._init_method = None
 
         self.event_manager = Luma_EventManager()
-        self.Sprite = Luma_SpriteCreator(self)
-        self.Graphics = None
         self.Mouse = Luma_Mouse(self)
         self.Keyboard = Luma_Keyboard(self)
+        self.Sprite = Luma_SpriteCreator(self)
 
         if not self.sdl.init(SDL_INIT.SDL_INIT_VIDEO):
             error_msg = self.sdl.get_error()
@@ -74,6 +82,7 @@ class Luma:
             raise Luma_Error(error_msg)
 
         self.Graphics = Luma_Graphics(self)
+        self.Font = Luma_Font(self)
 
     def start(self, fn: Callable):
         self._init_method = fn
@@ -124,7 +133,7 @@ class Luma:
                     self._update_method(dt)
 
                 self.sdl.set_render_draw_color(
-                    self.renderer, *self.Graphics.background_color
+                    self.renderer, *self.Graphics.backgroudColor
                 )
 
                 self.sdl.render_clear(self.renderer)
@@ -148,6 +157,9 @@ class Luma:
         self.event_manager.dispatch(Luma.EVENTS.QUIT)
 
         self.running = False
+
+        if self.Font:
+            self.Font._cleanup()
 
         if self.renderer:
             self.sdl.destroy_renderer(self.renderer)

@@ -1,5 +1,5 @@
 from typing import TYPE_CHECKING
-
+import ctypes
 from luma.core.error import Luma_Error
 from luma.sdl.shapes import SDL_Rect
 
@@ -38,7 +38,8 @@ class Luma_Graphics:
 
     def __init__(self, sdl: "Luma"):
         self.engine = sdl
-        self.background_color: tuple[int, int, int, int] = Colors.BLACK
+        self._background_color: tuple[int, int, int, int] = Colors.BLACK
+        self._current_draw_color: tuple[int, int, int, int] = Colors.WHITE
 
     @property
     def renderer(self):
@@ -48,22 +49,41 @@ class Luma_Graphics:
     def sdl(self):
         return self.engine.sdl
 
-    def setBackgroundColor(self, *args):
+    @property
+    def backgroundColor(self):
+        return self._background_color
 
-        self.background_color = get_rgba(*args)
+    @backgroundColor.setter
+    def backgroudColor(self, *args):
+        self._background_color = get_rgba(*args)
+
+    def setBackgroundColor(self, *args):
+        self._background_color = get_rgba(*args)
 
     def setDrawColor(self, *args):
-
         r, g, b, a = get_rgba(*args)
 
         if not self.sdl.set_render_draw_color(self.renderer, r, g, b, a):
             error_msg = self.sdl.get_error()
             raise Luma_Error(error_msg)
 
+        self._current_draw_color = (r, g, b, a)
+
+    def getDrawColor(self):
+        # r, g, b, a = (
+        #     ctypes.c_uint8(),
+        #     ctypes.c_uint8(),
+        #     ctypes.c_uint8(),
+        #     ctypes.c_uint8(),
+        # )
+
+        # self.sdl.get_render_draw_color(self.renderer, r, g, b, a)
+
+        # return (r.value, g.value, b.value, a.value)
+        return self._current_draw_color
+
     def resetDrawColor(self):
-        if not self.sdl.set_render_draw_color(self.renderer, 0, 0, 0, 255):
-            error_msg = self.sdl.get_error()
-            raise Luma_Error(error_msg)
+        self.setDrawColor(self.COLORS.WHITE)
 
     def drawRect(self, x: float, y: float, w: float, h: float, fill: bool = True):
         if fill:

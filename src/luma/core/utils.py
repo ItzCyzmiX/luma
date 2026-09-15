@@ -7,7 +7,7 @@ def get_lib_path(name: str) -> str:
     if getattr(sys, "frozen", False):
         base = os.path.join(sys._MEIPASS, "luma")
     else:
-        base = os.path.join(os.path.dirname(__file__), "luma")
+        base = os.path.join(os.path.dirname(__file__), "..", "..", "luma")
 
     ext = "dll"
 
@@ -27,3 +27,7 @@ def get_sdl_path() -> str:
 
 def get_sdl_image_path() -> str:
     return get_lib_path("SDL3_image")
+
+
+def get_sdl_ttf_path() -> str:
+    return get_lib_path("SDL3_ttf")
