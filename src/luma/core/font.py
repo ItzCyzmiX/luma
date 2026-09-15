@@ -89,11 +89,11 @@ class Luma_Text:
     def sdl(self):
         return self.engine.sdl
 
-    @property 
+    @property
     def font(self):
         return self._font
 
-    @font.setter 
+    @font.setter
     def font(self, new_font: Luma_Font):
         self._font = new_font
         self._rebuild_text(self._text_str)
@@ -107,7 +107,8 @@ class Luma_Text:
         if not self.is_alive:
             return
 
-        self._rebuild_text(new_text)
+        if new_text != self._text_str:
+            self._rebuild_text(new_text)
 
     def _rebuild_text(self, text: str):
         self._text_str = text
