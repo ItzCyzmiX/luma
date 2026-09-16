@@ -4,18 +4,25 @@ import sys
 from collections.abc import Callable
 from platform import system
 
+from luma.core.audio import Luma_AudioManager
 from luma.core.error import Luma_Error
 from luma.core.event import DEFAULT_EVENTS_ENUM, Luma_EventManager
-from luma.core.font import Luma_Font, Luma_Text
+from luma.core.font import Luma_Font
 from luma.core.graphics import Luma_Graphics
 from luma.core.keyboard import Luma_Keyboard
 from luma.core.mouse import Luma_Mouse
 from luma.core.sprite import Luma_SpriteCreator
-from luma.core.utils import get_sdl_image_path, get_sdl_path, get_sdl_ttf_path
+from luma.core.utils import (
+    get_sdl_image_path,
+    get_sdl_mixer_path,
+    get_sdl_path,
+    get_sdl_ttf_path,
+)
 from luma.sdl.consts import SDL_BLENDMODE, SDL_EVENT, SDL_INIT
 from luma.sdl.event import SDL_Event
 from luma.sdl.font import SDLTTFBindings
 from luma.sdl.image import SDLImageBindings
+from luma.sdl.mixer import SDLMixerBindings
 from luma.sdl.sdl3 import SDL3Bindings
 
 
@@ -27,6 +34,7 @@ class Luma:
         sdl_path: str | None = None,
         sdl_image_path: str | None = None,
         sdl_ttf_path: str | None = None,
+        sdl_mixer_path: str | None = None,
     ):
         self.window = None
         self.renderer = None
@@ -37,9 +45,12 @@ class Luma:
         self.sdl_path = sdl_path or get_sdl_path()
         self.sdl_image_path = sdl_image_path or get_sdl_image_path()
         self.sdl_font_path = sdl_ttf_path or get_sdl_ttf_path()
+        self.sdl_mixer_path = sdl_mixer_path or get_sdl_mixer_path()
+
         self.sdl = SDL3Bindings(ctypes.CDLL(self.sdl_path))
         self.sdl_image = SDLImageBindings(ctypes.CDLL(self.sdl_image_path))
         self.sdl_ttf = SDLTTFBindings(ctypes.CDLL(self.sdl_font_path))
+        self.sdl_mixer = SDLMixerBindings(ctypes.CDLL(self.sdl_mixer_path))
 
         self.running = True
 
@@ -52,13 +63,14 @@ class Luma:
         self.Keyboard = Luma_Keyboard(self)
         self.Sprite = Luma_SpriteCreator(self)
 
-
         self._created_fonts = []
 
-        if not self.sdl.init(SDL_INIT.SDL_INIT_VIDEO):
+        if not self.sdl.init(SDL_INIT.SDL_INIT_VIDEO | SDL_INIT.SDL_INIT_AUDIO):
             error_msg = self.sdl.get_error()
 
             raise Luma_Error(error_msg)
+
+        self.Audio = Luma_AudioManager(self)
 
     def create_window(self, title: str, width: int, height: int, flags: int = 0):
 
@@ -166,6 +178,8 @@ class Luma:
                 self.sdl_ttf.close_font(font)
 
             self.Font._cleanup()
+
+        self.Audio._cleanup()
 
         if self.renderer:
             self.sdl.destroy_renderer(self.renderer)

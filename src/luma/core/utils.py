@@ -31,3 +31,6 @@ def get_sdl_image_path() -> str:
 
 def get_sdl_ttf_path() -> str:
     return get_lib_path("SDL3_ttf")
+
+def get_sdl_mixer_path() -> str:
+    return get_lib_path("SDL3_mixer")
