@@ -103,15 +103,9 @@ class Luma_Sound:
         if not self._audio or not self._track:
             return
 
-        begining_frame = self.sdl_mixer.ms_to_trackframes(self._track, 0)
+        self.position = 0
 
-        if begining_frame == -1:
-            return
-
-        if not self.sdl_mixer.set_track_playback_position(self._track, begining_frame):
-            msg = self.sdl.get_error()
-            raise Luma_Error(msg)
-
+ 
     @property
     def position(self):
         if not self._track:
