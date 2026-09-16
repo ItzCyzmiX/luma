@@ -18,34 +18,9 @@ class FLIP_MODE(Enum):
 
 
 class Luma_Sprite:
-    def __init__(self, engine: "Luma"):
-        self.engine = engine
-        self.img_path: str | None = None
-        self.texture: SDL_Texture | None = None
-        self.sprite_creator: Luma_SpriteCreator | None = None
-
-        (
-            self.x,
-            self.y,
-            self.w,
-            self.h,
-            self.angle,
-            self.center_point,
-            self.flip_mode,
-            self._alpha,
-            self._color_mod,
-        ) = (0.0, 0.0, 0.0, 0.0, 0.0, None, FLIP_MODE.NONE, 255, (255, 255, 255))
-
-        self.dest_rect: tuple[float, float, float, float] = (
-            self.x,
-            self.y,
-            self.w,
-            self.h,
-        )
-        self.source_rect: tuple[float, float, float, float] = (0, 0, self.w, self.h)
-
-    def create(
+    def __init__(
         self,
+        engine: "Luma",
         sprite_creator,
         path: str,
         x: float,
@@ -54,6 +29,7 @@ class Luma_Sprite:
         w: float | None = None,
         h: float | None = None,
     ):
+        self.engine = engine
         self.sprite_creator = sprite_creator
         self.img_path = path
         self.texture = texture
@@ -62,13 +38,11 @@ class Luma_Sprite:
         self._alpha = 255
         self._color_mod = (255, 255, 255)
         self.flip_mode = FLIP_MODE.NONE
+        self.angle = 0.0 
 
         self.x, self.y = x, y
-
-        if w is not None:
-            self.w = w
-        if h is not None:
-            self.h = h
+        
+        self.w, self.h = w, h
 
         self.dest_rect = (
             self.x,
@@ -80,8 +54,7 @@ class Luma_Sprite:
 
         self.sdl.set_texture_blendmode(self.texture, SDL_BLENDMODE.SDL_BLENDMODE_BLEND)
 
-        return self
-
+        
     @property
     def alpha(self):
         return self._alpha
@@ -181,7 +154,8 @@ class Luma_SpriteCreator:
     ):
         texture = self._load_texture(path)
 
-        return Luma_Sprite(self.engine).create(
+        return Luma_Sprite(
+            self.engine,
             self,
             path,
             x,

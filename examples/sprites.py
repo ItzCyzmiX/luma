@@ -23,7 +23,6 @@ flip_index = 0
 
 graphics.setBackgroundColor(20, 24, 32)
 
-
 @engine.draw
 def draw():
     sprite.draw()

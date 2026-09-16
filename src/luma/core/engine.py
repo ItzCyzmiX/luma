@@ -52,6 +52,9 @@ class Luma:
         self.Keyboard = Luma_Keyboard(self)
         self.Sprite = Luma_SpriteCreator(self)
 
+
+        self._created_fonts = []
+
         if not self.sdl.init(SDL_INIT.SDL_INIT_VIDEO):
             error_msg = self.sdl.get_error()
 
@@ -159,6 +162,9 @@ class Luma:
         self.running = False
 
         if self.Font:
+            for font in self._created_fonts:
+                self.sdl_ttf.close_font(font)
+
             self.Font._cleanup()
 
         if self.renderer:

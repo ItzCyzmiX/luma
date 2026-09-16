@@ -35,6 +35,11 @@ class Luma_Font:
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
 
+        
+        self.engine._created_fonts.append(
+            self._font
+        )   
+
         return self
 
     def write(self, text: str, x: float = 0.0, y: float = 0.0):
@@ -44,6 +49,17 @@ class Luma_Font:
         self.sdl_ttf.destroy_text_renderer(self._text_renderer)
         self.sdl_ttf.quit()
 
+    def kill(self):
+        if not self.sdl_ttf.close_font(self._font):
+            msg = self.sdl.get_error()
+            raise Luma_Error(msg)
+        
+        try: 
+            self.sdl_ttf.close_font(self._font)
+        except ValueError:
+            pass
+
+        self._font = None
 
 class Luma_Text:
     def __init__(
@@ -55,6 +71,7 @@ class Luma_Text:
             return
         self._text_str = text
         self._font = font
+        
         payload = text.encode("utf-8")
         self._text = self.sdl_ttf.create_text(
             self.engine.Font._text_renderer,

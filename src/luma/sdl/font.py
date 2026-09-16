@@ -31,6 +31,12 @@ class SDLTTFBindings(NativeBindings):
             ctypes.c_void_p,
         )
 
+        self.close_font = self.bind(
+            "TTF_CloseFont",
+            [ctypes.c_void_p],
+            ctypes.c_bool
+        )
+
         self.create_text_engine = self.bind(
             "TTF_CreateRendererTextEngine",
             [ctypes.c_void_p],
