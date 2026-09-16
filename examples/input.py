@@ -15,7 +15,7 @@ graphics.setBackgroundColor(18, 24, 30)
 
 @engine.start
 def init():
-    print("A key:", engine.Keyboard.keyToKeyCode("a"))
+    print("A key:", engine.Keyboard.keyToKeyCode("spp"))
 
 
 @engine.draw
@@ -31,8 +31,8 @@ def draw():
 def update(dt):
     global player_x, player_y
 
-    if engine.Keyboard.isKeyHeld(engine.Keyboard.A):
-        player_x -= player_speed * dt
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.A):    
+        player_x -= player_speed * dt 
     if engine.Keyboard.isKeyHeld(engine.Keyboard.D):
         player_x += player_speed * dt
     if engine.Keyboard.isKeyHeld(engine.Keyboard.W):

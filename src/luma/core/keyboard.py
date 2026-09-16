@@ -10,8 +10,7 @@ if TYPE_CHECKING:
 class Luma_Keyboard:
     def __init__(self, engine: "Luma"):
         self.engine = engine
-        self._keys_pressed: set[KEYS] = set()
-
+        self._keys_pressed: set[KEYS] = set() 
         for key in KEYS:
             self.__setattr__(key.name, key)
 
