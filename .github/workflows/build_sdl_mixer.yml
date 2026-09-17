@@ -1,0 +1,87 @@
+name: Build SDL3_mixer
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build SDL3_mixer (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        include:
+          - os: windows-latest
+            artifact: windows
+          - os: ubuntu-latest
+            artifact: linux
+          - os: macos-latest
+            artifact: macos
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Checkout SDL3
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL
+          path: SDL
+
+      - name: Checkout SDL_mixer
+        uses: actions/checkout@v4
+        with:
+          repository: libsdl-org/SDL_mixer
+          path: SDL_mixer
+          submodules: recursive
+
+      - name: Setup CMake
+        uses: ./.github/actions/setup-cmake
+
+      - name: Install Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libflac-dev libvorbis-dev libopus-dev libopusfile-dev libmpg123-dev libmodplug-dev libfluidsynth-dev libwavpack-dev
+
+      - name: Configure & build SDL3
+        run: |
+          cmake -S SDL -B build-sdl3 -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_UNIX_CONSOLE_BUILD=ON
+          cmake --build build-sdl3 --config Release
+          cmake --install build-sdl3 --prefix ${{ github.workspace }}/install-sdl3 --config Release
+
+      - name: Configure & build SDL3_mixer
+        run: |
+          cmake -S SDL_mixer -B build-mixer -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DSDL3MIXER_VENDORED=ON -DCMAKE_PREFIX_PATH=${{ github.workspace }}/install-sdl3
+          cmake --build build-mixer --config Release
+
+      # Windows
+      - name: Prepare Windows binaries
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          mkdir -p output
+          cp build-mixer/Release/SDL3_mixer.dll output/SDL3_mixer.dll
+          cp install-sdl3/bin/SDL3.dll output/SDL3.dll
+
+      # Linux
+      - name: Prepare Linux binaries
+        if: runner.os == 'Linux'
+        run: |
+          mkdir -p output
+          cp build-mixer/libSDL3_mixer.so output/libSDL3_mixer.so
+          cp install-sdl3/lib/libSDL3.so* output/
+
+      # macOS
+      - name: Prepare macOS binaries
+        if: runner.os == 'macOS'
+        run: |
+          mkdir -p output
+          cp build-mixer/libSDL3_mixer.dylib output/libSDL3_mixer.dylib
+          cp install-sdl3/lib/libSDL3.dylib output/libSDL3.dylib
+
+      - name: Upload SDL3_mixer binaries
+        uses: actions/upload-artifact@v4
+        with:
+          name: SDL3_mixer-${{ matrix.artifact }}
+          path: output/
