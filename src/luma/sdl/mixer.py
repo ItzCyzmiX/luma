@@ -24,6 +24,8 @@ class SDLMixerBindings(NativeBindings):
             ctypes.c_void_p,
         )
 
+        self.destroy_mixer = self.bind("MIX_DestroyMixer", [ctypes.c_void_p], None)
+
         self.create_track = self.bind(
             "MIX_CreateTrack", [ctypes.c_void_p], ctypes.c_void_p
         )
@@ -38,9 +40,13 @@ class SDLMixerBindings(NativeBindings):
             "MIX_SetTrackAudio", [ctypes.c_void_p, ctypes.c_void_p], ctypes.c_bool
         )
 
+        self.destroy_audio = self.bind("MIX_DestroyAudio", [ctypes.c_void_p], None)
+
         self.play_track = self.bind(
             "MIX_PlayTrack", [ctypes.c_void_p, ctypes.c_uint32], ctypes.c_bool
         )
+
+        self.destroy_track = self.bind("MIX_DestroyTrack", [ctypes.c_void_p], None)
 
         self.pause_track = self.bind("MIX_PauseTrack", [ctypes.c_void_p], ctypes.c_bool)
 

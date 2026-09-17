@@ -40,7 +40,7 @@ class Luma_AudioManager:
         return self.engine.sdl_mixer
 
     def _cleanup(self):
-
+        self.sdl_mixer.destroy_mixer(self._mixer)
         self.sdl_mixer.mix_quit()
 
 
@@ -59,8 +59,12 @@ class Luma_Sound:
         self.loop = False
         self.paused = False
         self.playing = False
+        self.is_killed = False
 
     def _load_sound(self):
+        if self._audio:
+            self.sdl_mixer.destroy_audio(self._audio)
+
         self._audio = self.sdl_mixer.load_audio(
             self._audio_manager._mixer, self._path.encode(), True
         )
@@ -105,7 +109,6 @@ class Luma_Sound:
 
         self.position = 0
 
- 
     @property
     def position(self):
         if not self._track:
@@ -146,5 +149,23 @@ class Luma_Sound:
     def path(self, new_path: str):
         if self._path == new_path:
             return
+
         self._path = new_path
         self._load_sound()
+
+    def kill(self):
+        if self.is_killed and not self._audio and not self._track:
+            return
+
+        if self._audio:
+            self.sdl_mixer.destroy_audio(self._audio)
+            self._audio = None
+
+        if self._track:
+            self.sdl_mixer.destroy_track(self._track)
+            self._track = None
+
+        self.is_killed = True
+
+    def isKilled(self):
+        return self.is_killed

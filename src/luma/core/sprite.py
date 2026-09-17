@@ -38,10 +38,10 @@ class Luma_Sprite:
         self._alpha = 255
         self._color_mod = (255, 255, 255)
         self.flip_mode = FLIP_MODE.NONE
-        self.angle = 0.0 
+        self.angle = 0.0
 
         self.x, self.y = x, y
-        
+
         self.w, self.h = w, h
 
         self.dest_rect = (
@@ -54,7 +54,6 @@ class Luma_Sprite:
 
         self.sdl.set_texture_blendmode(self.texture, SDL_BLENDMODE.SDL_BLENDMODE_BLEND)
 
-        
     @property
     def alpha(self):
         return self._alpha
@@ -126,8 +125,8 @@ class Luma_Sprite:
         self.texture = None
         self.is_alive = False
 
-    def isAlive(self):
-        return self.is_alive
+    def isKilled(self):
+        return not self.is_alive
 
 
 class CachedTexture(TypedDict):
