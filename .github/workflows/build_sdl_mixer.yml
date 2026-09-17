@@ -42,7 +42,7 @@ jobs:
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libflac-dev libvorbis-dev libopus-dev libopusfile-dev libmpg123-dev libmodplug-dev libfluidsynth-dev libwavpack-dev
+          sudo apt-get install -y libflac-dev libvorbis-dev libopus-dev libopusfile-dev libmpg123-dev libmodplug-dev libfluidsynth-dev libwavpack-dev libxtst-dev
 
       - name: Configure & build SDL3
         run: |
