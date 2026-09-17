@@ -15,12 +15,6 @@ def init():
 
     sound = engine.Audio.loadSound("examples/fx.mp3")
 
-    print(sound.duration)
-
-    sound.loop = True
-
-    print(sound.loop)
-
     sound.on_finish = lambda: print("hi")
 
 
@@ -30,10 +24,12 @@ def input(key):
         sound.position = 0
 
     if key == engine.Keyboard.SPACE:
+        print(sound.playing, sound.paused)
         if sound.paused:
-            sound.resume()
+            sound.play()
         else:
             sound.pause()
+        print(sound.playing, sound.paused)
 
     if key == engine.Keyboard.P:
         sound.play()

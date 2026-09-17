@@ -12,6 +12,7 @@ class Luma_AudioManager:
 
     def __init__(self, engine: "Luma"):
         self.engine = engine
+        self._sounds: list[Luma_Sound] = []
 
         if not self.sdl_mixer.mix_init():
             msg = self.sdl.get_error()
@@ -26,7 +27,9 @@ class Luma_AudioManager:
             raise Luma_Error(msg)
 
     def loadSound(self, path: str):
-        return Luma_Sound(self, path)
+        s = Luma_Sound(self, path)
+        self._sounds.append(s)
+        return s
 
     @property
     def sdl(self):
@@ -37,7 +40,14 @@ class Luma_AudioManager:
         return self.engine.sdl_mixer
 
     def _cleanup(self):
-        self.sdl_mixer.destroy_mixer(self._mixer)
+        for sound in self._sounds:
+            sound.kill()
+        self._sounds.clear()
+
+        if self._mixer:
+            self.sdl_mixer.destroy_mixer(self._mixer)
+            self._mixer = None
+
         self.sdl_mixer.mix_quit()
 
 
@@ -54,7 +64,6 @@ class Luma_Sound:
         self._audio = None
         self._gain: float = 1.0
         self._position: int = 0
-        self._load_sound()
         self.loop = False
         self.paused = False
         self.playing = False
@@ -67,26 +76,34 @@ class Luma_Sound:
             self._track, self._track_finish_callback, None
         )
 
+        self._load_sound()
+
     def _on_track_finish_callback(self, data: None, track: int):
-        if track != self._track:
+        if self.is_killed or track != self._track:
             return
 
+        self.playing = False
+        self.paused = False
+        self.position = 0
+
         if self.loop:
-            self.playing = False
             self.play()
         else:
-            self.stop()
-            self.on_finish()
+            if not self._is_cleaning_up:
+                self.on_finish()
 
     def on_finish(self):
         pass
 
     def _load_sound(self):
-        if not self._track:
+        if not self._track or self.is_killed:
             return
+
+        self.stop()
 
         if self._audio:
             self.sdl_mixer.destroy_audio(self._audio)
+            self._audio = None
 
         self._audio = self.sdl_mixer.load_audio(
             self._audio_manager._mixer, self._path.encode(), True
@@ -101,40 +118,63 @@ class Luma_Sound:
             raise Luma_Error(msg)
 
     def pause(self):
-        if not self._track or self.paused:
+        if (
+            self.is_killed
+            or not self._track
+            or not self._audio
+            or not self.playing
+            or self.paused
+        ):
             return
 
-        self.sdl_mixer.pause_track(self._track)
+        if not self.sdl_mixer.pause_track(self._track):
+            msg = self.sdl.get_error()
+            raise Luma_Error(msg)
+
         self.paused = True
         self.playing = False
 
-    def resume(self):
-        if not self._track or not self.paused:
+    def _resume(self):
+        if (
+            self.is_killed
+            or not self._track
+            or not self._audio
+            or self.playing
+            or not self.paused
+        ):
             return
 
-        self.sdl_mixer.resume_track(self._track)
+        if not self.sdl_mixer.resume_track(self._track):
+            msg = self.sdl.get_error()
+            raise Luma_Error(msg)
+
         self.paused = False
         self.playing = True
 
     def play(self):
-        if not self._audio or not self._track or self.playing:
+        if self.is_killed or not self._audio or not self._track:
             return
 
-        self.playing = True
+        if self.paused:
+            self._resume()
+            return
 
         if not self.sdl_mixer.play_track(self._track, 0):
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
 
-    def stop(self):
-        if not self._audio or not self._track or not self.playing:
-            return
+        self.playing = True
+        self.paused = False
 
-        self.playing = False
+    def stop(self):
+        if self.is_killed or not self._audio or not self._track:
+            return
 
         if not self.sdl_mixer.stop_track(self._track, 0):
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
+
+        self.playing, self.paused, self.position = False, False, 0
 
     @property
     def duration(self):
@@ -156,16 +196,16 @@ class Luma_Sound:
     def volume(self, new_volume: float):
         if not self.sdl_mixer or not self._track:
             return
-
-        if not self.sdl_mixer.set_track_gain(self._track, max(new_volume, 0)):
+        new_volume = max(float(new_volume), 0.0)
+        if not self.sdl_mixer.set_track_gain(self._track, new_volume):
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
 
-        self._gain = max(new_volume, 0)
+        self._gain = new_volume
 
     @property
     def position(self):
-        if not self._track:
+        if not self._track or not self._audio:
             return -1
 
         self._position = int(
@@ -174,17 +214,16 @@ class Luma_Sound:
             )
         )
 
-        return self._position
+        return max(self._position, 0)
 
     @position.setter
     def position(self, pos: int):
-        if not self._track:
+        if not self._track or not self._audio:
             return
 
-        clamped_pos = pos
+        duration = self.duration
 
-        if pos >= self.duration or pos <= 0:
-            clamped_pos = 0
+        clamped_pos = max(0, min(int(pos), duration))
 
         trackframes = self.sdl_mixer.ms_to_trackframes(self._track, clamped_pos)
 
@@ -215,11 +254,16 @@ class Luma_Sound:
             return
 
         self._path = new_path
+
         self._load_sound()
 
     def kill(self):
         if self.is_killed and not self._audio and not self._track:
             return
+
+        self._is_cleaning_up = True
+
+        self.stop()
 
         if self._audio:
             self.sdl_mixer.destroy_audio(self._audio)
@@ -230,6 +274,8 @@ class Luma_Sound:
             self._track = None
 
         self.is_killed = True
+        self.playing = False
+        self.paused = False
 
     def isKilled(self):
         return self.is_killed
