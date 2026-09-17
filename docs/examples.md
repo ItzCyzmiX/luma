@@ -59,6 +59,16 @@ python examples/font.py
 `engine.Font.open(...)` and `font.write(...)`, and updating drawable text each
 frame. It also shows changing text content and position at runtime.
 
+## Audio
+
+```bash
+python examples/audio.py
+```
+
+`audio.py` demonstrates loading a sound through `engine.Audio`, playback,
+pause/resume, seeking in milliseconds, volume, looping, and the `on_finish`
+callback. It uses the included `examples/fx.mp3` file.
+
 ## Starter
 
 ```bash

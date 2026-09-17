@@ -47,6 +47,48 @@ receives `dt`, elapsed seconds since the previous frame.
 
 Returns a decorator for registering an event callback. See [Input](input.md).
 
+## `Luma.Audio`
+
+The audio manager is initialized by `Luma()` and uses the default playback
+device.
+
+### `loadSound(path: str) -> Luma_Sound`
+
+Loads an audio file immediately and returns a sound object. See [Audio](audio.md)
+for the playback and lifecycle guide.
+
+## `Luma_Sound`
+
+### `play()`
+
+Starts playback, or resumes the sound when it is paused.
+
+### `pause()`
+
+Pauses a currently playing sound.
+
+### `stop()`
+
+Stops playback and resets `position` to zero.
+
+### Properties
+
+| Property | Description |
+| --- | --- |
+| `path` | Audio file path. Assigning a new path reloads the sound. |
+| `playing` | `True` while the sound is actively playing. |
+| `paused` | `True` while playback is paused. |
+| `loop` | Restart the sound automatically when it finishes. |
+| `volume` | Floating-point gain, defaulting to `1.0`. Values below zero are clamped to zero. |
+| `position` | Current or requested playback position in milliseconds. |
+| `duration` | Sound length in milliseconds. |
+| `on_finish` | No-argument callback invoked when non-looping playback finishes. |
+
+### `kill()`
+
+Releases the native audio and track resources. The audio manager releases all
+remaining sounds during engine shutdown.
+
 ## `Luma.Keyboard`
 
 ### `isKeyHeld(key) -> bool`

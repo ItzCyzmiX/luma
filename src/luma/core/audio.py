@@ -64,6 +64,7 @@ class Luma_Sound:
         self._audio = None
         self._gain: float = 1.0
         self._position: int = 0
+        self._is_cleaning_up = False
         self.loop = False
         self.paused = False
         self.playing = False
