@@ -11,6 +11,9 @@ class SDL_AudioSpec(ctypes.Structure):
     ]
 
 
+C_TRACK_STOP_CALLBACK = ctypes.CFUNCTYPE(None, ctypes.c_void_p, ctypes.c_void_p)
+
+
 class SDLMixerBindings(NativeBindings):
     def __init__(self, library: ctypes.CDLL):
         super().__init__(library)
@@ -36,8 +39,16 @@ class SDLMixerBindings(NativeBindings):
             ctypes.c_void_p,
         )
 
+        self.get_audio_duration = self.bind(
+            "MIX_GetAudioDuration", [ctypes.c_void_p], ctypes.c_int64
+        )
+
         self.set_track_audio = self.bind(
             "MIX_SetTrackAudio", [ctypes.c_void_p, ctypes.c_void_p], ctypes.c_bool
+        )
+
+        self.set_track_gain = self.bind(
+            "MIX_SetTrackGain", [ctypes.c_void_p, ctypes.c_float], ctypes.c_bool
         )
 
         self.destroy_audio = self.bind("MIX_DestroyAudio", [ctypes.c_void_p], None)
@@ -56,6 +67,16 @@ class SDLMixerBindings(NativeBindings):
 
         self.stop_track = self.bind(
             "MIX_StopTrack", [ctypes.c_void_p, ctypes.c_int64], ctypes.c_bool
+        )
+
+        self.set_track_stopped_callback = self.bind(
+            "MIX_SetTrackStoppedCallback",
+            [ctypes.c_void_p, C_TRACK_STOP_CALLBACK, ctypes.c_void_p],
+            ctypes.c_bool,
+        )
+
+        self.set_track_loop = self.bind(
+            "MIX_SetTrackLoops", [ctypes.c_void_p, ctypes.c_int], ctypes.c_bool
         )
 
         self.trackframes_to_ms = self.bind(

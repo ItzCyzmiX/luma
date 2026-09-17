@@ -1,7 +1,7 @@
-import ctypes
 from typing import TYPE_CHECKING
 
 from luma.core.error import Luma_Error
+from luma.sdl.mixer import C_TRACK_STOP_CALLBACK
 
 if TYPE_CHECKING:
     from luma.core.engine import Luma
@@ -21,12 +21,9 @@ class Luma_AudioManager:
             Luma_AudioManager.AUDIO_DEVICE_DEFAULT_PLAYBACK, None
         )
 
-        # self._sounds_track = self.sdl_mixer.create_track(self._mixer)
-        # self._music_track = self.sdl_mixer.create_track(self._mixer)
-
-        # if not self._music_track or not self._sounds_track:
-        #     msg = self.sdl.get_error()
-        #     raise Luma_Error(msg)
+        if not self._mixer:
+            msg = self.sdl.get_error()
+            raise Luma_Error(msg)
 
     def loadSound(self, path: str):
         return Luma_Sound(self, path)
@@ -55,13 +52,39 @@ class Luma_Sound:
             raise Luma_Error(msg)
 
         self._audio = None
+        self._gain: float = 1.0
+        self._position: int = 0
         self._load_sound()
         self.loop = False
         self.paused = False
         self.playing = False
         self.is_killed = False
 
+        self._track_finish_callback = C_TRACK_STOP_CALLBACK(
+            self._on_track_finish_callback
+        )
+        self.sdl_mixer.set_track_stopped_callback(
+            self._track, self._track_finish_callback, None
+        )
+
+    def _on_track_finish_callback(self, data: None, track: int):
+        if track != self._track:
+            return
+
+        if self.loop:
+            self.playing = False
+            self.play()
+        else:
+            self.stop()
+            self.on_finish()
+
+    def on_finish(self):
+        pass
+
     def _load_sound(self):
+        if not self._track:
+            return
+
         if self._audio:
             self.sdl_mixer.destroy_audio(self._audio)
 
@@ -70,6 +93,10 @@ class Luma_Sound:
         )
 
         if not self._audio:
+            msg = self.sdl.get_error()
+            raise Luma_Error(msg)
+
+        if not self.sdl_mixer.set_track_audio(self._track, self._audio):
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
 
@@ -95,43 +122,80 @@ class Luma_Sound:
 
         self.playing = True
 
-        if not self.sdl_mixer.set_track_audio(self._track, self._audio):
-            msg = self.sdl.get_error()
-            raise Luma_Error(msg)
-
         if not self.sdl_mixer.play_track(self._track, 0):
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
 
-    def rewind(self):
-        if not self._audio or not self._track:
+    def stop(self):
+        if not self._audio or not self._track or not self.playing:
             return
 
-        self.position = 0
+        self.playing = False
+
+        if not self.sdl_mixer.stop_track(self._track, 0):
+            msg = self.sdl.get_error()
+            raise Luma_Error(msg)
+
+    @property
+    def duration(self):
+        if not self._audio or not self._track:
+            return 0
+
+        return max(
+            self.sdl_mixer.trackframes_to_ms(
+                self._track, self.sdl_mixer.get_audio_duration(self._audio)
+            ),
+            0,
+        )
+
+    @property
+    def volume(self):
+        return self._gain
+
+    @volume.setter
+    def volume(self, new_volume: float):
+        if not self.sdl_mixer or not self._track:
+            return
+
+        if not self.sdl_mixer.set_track_gain(self._track, max(new_volume, 0)):
+            msg = self.sdl.get_error()
+            raise Luma_Error(msg)
+
+        self._gain = max(new_volume, 0)
 
     @property
     def position(self):
         if not self._track:
             return -1
 
-        return int(
+        self._position = int(
             self.sdl_mixer.trackframes_to_ms(
                 self._track, self.sdl_mixer.get_track_playback_position(self._track)
             )
         )
+
+        return self._position
 
     @position.setter
     def position(self, pos: int):
         if not self._track:
             return
 
-        trackframes = self.sdl_mixer.ms_to_trackframes(self._track, pos)
+        clamped_pos = pos
+
+        if pos >= self.duration or pos <= 0:
+            clamped_pos = 0
+
+        trackframes = self.sdl_mixer.ms_to_trackframes(self._track, clamped_pos)
+
         if trackframes == -1:
             return
 
         if not self.sdl_mixer.set_track_playback_position(self._track, trackframes):
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
+
+        self._position = clamped_pos
 
     @property
     def sdl_mixer(self):

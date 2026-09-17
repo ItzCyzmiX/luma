@@ -15,11 +15,19 @@ def init():
 
     sound = engine.Audio.loadSound("examples/fx.mp3")
 
+    print(sound.duration)
+
+    sound.loop = True
+
+    print(sound.loop)
+
+    sound.on_finish = lambda: print("hi")
+
 
 @engine.on(engine.EVENTS.KEYPRESS)
 def input(key):
     if key == engine.Keyboard.R:
-        sound.rewind()
+        sound.position = 0
 
     if key == engine.Keyboard.SPACE:
         if sound.paused:
@@ -34,6 +42,11 @@ def input(key):
         sound.position += 1000
     elif key == engine.Keyboard.LEFT:
         sound.position -= 1000
+
+    if key == engine.Keyboard.UP:
+        sound.volume += 0.5
+    elif key == engine.Keyboard.DOWN:
+        sound.volume -= 0.5
 
 
 @engine.draw
