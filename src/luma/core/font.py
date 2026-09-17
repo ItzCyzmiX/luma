@@ -35,10 +35,7 @@ class Luma_Font:
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
 
-        
-        self.engine._created_fonts.append(
-            self._font
-        )   
+        self.engine._created_fonts.append(self._font)
 
         return self
 
@@ -53,13 +50,14 @@ class Luma_Font:
         if not self.sdl_ttf.close_font(self._font):
             msg = self.sdl.get_error()
             raise Luma_Error(msg)
-        
-        try: 
+
+        try:
             self.sdl_ttf.close_font(self._font)
         except ValueError:
             pass
 
         self._font = None
+
 
 class Luma_Text:
     def __init__(
@@ -71,7 +69,7 @@ class Luma_Text:
             return
         self._text_str = text
         self._font = font
-        
+
         payload = text.encode("utf-8")
         self._text = self.sdl_ttf.create_text(
             self.engine.Font._text_renderer,
@@ -91,9 +89,6 @@ class Luma_Text:
         self._height = ctypes.c_int()
 
         self.sdl_ttf.get_text_size(self._text, self._width, self._height)
-
-        self.width = self._width.value
-        self.height = self._height.value
 
         self.is_alive = True
         self._color: tuple[int, int, int, int] = (255, 255, 255, 255)
@@ -127,6 +122,18 @@ class Luma_Text:
         if new_text != self._text_str:
             self._rebuild_text(new_text)
 
+    @property
+    def width(self):
+        return self._width.value
+
+    @property
+    def height(self):
+        return self._height.value
+
+    @height.setter
+    def height(self, value):
+        self._height = value
+
     def _rebuild_text(self, text: str):
         self._text_str = text
 
@@ -140,9 +147,6 @@ class Luma_Text:
         )
 
         self.sdl_ttf.get_text_size(self._text, self._width, self._height)
-
-        self.width = self._width.value
-        self.height = self._height.value
 
     def draw(self):
         if not self._text or not self.engine.Graphics:
