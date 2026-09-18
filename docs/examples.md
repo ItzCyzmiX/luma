@@ -69,16 +69,6 @@ python examples/audio.py
 pause/resume, seeking in milliseconds, volume, looping, and the `on_finish`
 callback. It uses the included `examples/fx.mp3` file.
 
-## Starter
-
-```bash
-python examples/starter.py
-```
-
-`starter.py` demonstrates a window, a loaded sprite, primitive shapes,
-overlapping rectangles, press callbacks, held-key movement, flipping, rotation,
-and frame-rate-independent motion.
-
 ## Pong
 
 ```bash
