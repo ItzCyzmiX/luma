@@ -16,6 +16,7 @@ immediate-mode primitive shape drawing and image sprites.
 - [Audio](audio.md): load, play, pause, seek, loop, and release sounds.
 - [Sprites](sprites.md): load, draw, transform, and crop image textures.
 - [Examples](examples.md): run the included starter, audio, font, and Pong programs.
+- [Building your game](building.md): create distributable executables for your Luma games.
 - [API reference](api.md): signatures, constants, and supported behavior.
 
 ## Smallest useful program
