@@ -99,14 +99,17 @@ class Luma:
         self.Graphics = Luma_Graphics(self)
         self.Font = Luma_Font(self)
 
-    def start(self, fn: Callable):
+    def start(self, fn: Callable[[], None]) -> Callable[[], None]:
         self._init_method = fn
+        return fn
 
-    def draw(self, fn: Callable):
+    def draw(self, fn: Callable[[], None]) ->  Callable[[], None]:
         self._draw_method = fn
+        return fn
 
-    def update(self, fn: Callable):
+    def update(self, fn: Callable[[float], None]) ->  Callable[[float], None]:
         self._update_method = fn
+        return fn
 
     def on(self, event_name: DEFAULT_EVENTS_ENUM):
         def decorator(func):

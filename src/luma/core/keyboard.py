@@ -1,18 +1,18 @@
 from typing import TYPE_CHECKING
 
 from luma.sdl.event import SDL_Event
-from luma.sdl.keys import KEYS
+from luma.sdl.keys import KEYS as KEYS_
 
 if TYPE_CHECKING:
     from luma.core.engine import Luma
 
 
 class Luma_Keyboard:
+    KEYS = KEYS_
+
     def __init__(self, engine: "Luma"):
         self.engine = engine
         self._keys_pressed: set[KEYS] = set() 
-        for key in KEYS:
-            self.__setattr__(key.name, key)
 
     @property
     def sdl(self):

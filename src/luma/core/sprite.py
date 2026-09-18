@@ -52,25 +52,10 @@ class Luma_Sprite:
         )
         self.source_rect = (0, 0, self.w, self.h)
 
+        self.alpha = 255 
+        self.color_mod: tuple[int, int, int] = (255, 255, 255)
+
         self.sdl.set_texture_blendmode(self.texture, SDL_BLENDMODE.SDL_BLENDMODE_BLEND)
-
-    @property
-    def alpha(self):
-        return self._alpha
-
-    @alpha.setter
-    def alpha(self, a: int):
-        self._alpha = a
-        # self.sdl.set_texture_alpha(self.texture, self._alpha)
-
-    @property
-    def color_mod(self):
-        return self._color_mod
-
-    @color_mod.setter
-    def color_mod(self, c: tuple[int, int, int]):
-        self._color_mod = c
-        # self.sdl.set_texture_color_mod(self.texture, *self._color_mod)
 
     def draw(self):
         if not self.texture or not self.is_alive:
@@ -83,8 +68,8 @@ class Luma_Sprite:
             SDL_Point(*self.center_point) if self.center_point is not None else None
         )
 
-        self.sdl.set_texture_alpha(self.texture, self._alpha)
-        self.sdl.set_texture_color_mod(self.texture, *self._color_mod)
+        self.sdl.set_texture_alpha(self.texture, self.alpha)
+        self.sdl.set_texture_color_mod(self.texture, *self.color_mod)
 
         self.sdl.render_texture(
             self.renderer,
