@@ -32,7 +32,7 @@ def draw():
 
 @engine.on(engine.EVENTS.KEYPRESS)
 def input(key):
-    if key == engine.Keyboard.SPACE:
+    if key == engine.Keyboard.KEYS.SPACE:
         text2.text = "U SPACED"
 
 

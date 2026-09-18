@@ -10,13 +10,13 @@ Holding the key does not repeatedly dispatch `KEYPRESS`.
 ```python
 @engine.on(Luma.EVENTS.KEYPRESS)
 def on_key_press(key):
-    if key == Luma.Keyboard.SPACE:
+    if key == engine.Keyboard.KEYS.SPACE:
         print("jump")
 
 
 @engine.on(Luma.EVENTS.KEYUP)
 def on_key_up(key):
-    if key == Luma.Keyboard.SPACE:
+    if key == engine.Keyboard.KEYS.SPACE:
         print("space released")
 ```
 
@@ -35,14 +35,14 @@ x = 100.0
 def update(dt):
     global x
 
-    if engine.Keyboard.isKeyHeld(Luma.Keyboard.D):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.KEYS.D):
         x += speed * dt
-    if engine.Keyboard.isKeyHeld(Luma.Keyboard.A):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.KEYS.A):
         x -= speed * dt
 ```
 
 This tracks the current pressed state separately from press and release
-callbacks. The key is a member of `Luma.Keyboard`, not a string.
+callbacks. The key is a member of `engine.Keyboard.KEYS`, not a string.
 
 `engine.Keyboard.isAnyPressed()` reports whether at least one key is held.
 `engine.Keyboard.currentPressed()` returns the set of currently held

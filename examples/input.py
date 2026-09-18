@@ -31,13 +31,13 @@ def draw():
 def update(dt):
     global player_x, player_y
 
-    if engine.Keyboard.isKeyHeld(engine.Keyboard.A):    
-        player_x -= player_speed * dt 
-    if engine.Keyboard.isKeyHeld(engine.Keyboard.D):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.KEYS.A):
+        player_x -= player_speed * dt
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.KEYS.D):
         player_x += player_speed * dt
-    if engine.Keyboard.isKeyHeld(engine.Keyboard.W):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.KEYS.W):
         player_y -= player_speed * dt
-    if engine.Keyboard.isKeyHeld(engine.Keyboard.S):
+    if engine.Keyboard.isKeyHeld(engine.Keyboard.KEYS.S):
         player_y += player_speed * dt
 
     if engine.Mouse.isButtonHeld(engine.Mouse.LEFT_BUTTON):
@@ -49,7 +49,7 @@ def update(dt):
 def on_key_press(key):
     global last_key
     last_key = f"Pressed: {key.name}"
-    if key == engine.Keyboard.ESCAPE:
+    if key == engine.Keyboard.KEYS.ESCAPE:
         engine.quit()
 
 

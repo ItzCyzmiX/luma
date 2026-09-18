@@ -56,7 +56,7 @@ Register an event callback with `engine.on`:
 ```python
 @engine.on(Luma.EVENTS.KEYPRESS)
 def on_key_press(key):
-    if key == Luma.Keyboard.SPACE:
+    if key == engine.Keyboard.KEYS.SPACE:
         print("Space pressed")
 ```
 

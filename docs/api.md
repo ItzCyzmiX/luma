@@ -119,18 +119,20 @@ Destroys SDL resources, quits SDL, and dispatches `Luma.EVENTS.QUIT`.
 
 | Member | Callback arguments |
 | --- | --- |
-| `KEYPRESS` | `key: Luma.KEYS` |
-| `KEYUP` | `key: Luma.KEYS` |
+| `KEYPRESS` | `key: engine.Keyboard.KEYS` |
+| `KEYUP` | `key: engine.Keyboard.KEYS` |
 | `QUIT` | none |
 | `MOUSEPRESS` | `button, position, clicks` |
 | `MOUSEUP` | `button, position, clicks` |
 | `MOUSEMOTION` | `position, relative` |
 
-## `Luma.KEYS`
+## `engine.Keyboard.KEYS`
 
 An enum containing the supported keyboard values. It includes alphabetic keys
 `A` through `Z`, `NUM_0` through `NUM_9`, punctuation, `SPACE`, `RETURN`,
 `ESCAPE`, `BACKSPACE`, `TAB`, `DELETE`, `CAPSLOCK`, and `F1` through `F12`.
+
+Use it as `engine.Keyboard.KEYS.SPACE`, `engine.Keyboard.KEYS.A`, and similar.
 
 ## `Luma_Graphics`
 

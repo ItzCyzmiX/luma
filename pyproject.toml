@@ -14,7 +14,7 @@ include = ["luma*"]
 luma = ["lib/*.dll", "lib/*.so", "lib/*.dylib"]
 
 [project]
-version = "0.2.2"
+version = "0.2.3"
 name = "luma-engine"
 requires-python = ">=3.10"
 description = "A lightweight python game engine powered by SDL3"

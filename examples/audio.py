@@ -16,37 +16,37 @@ sound.on_finish = report_finish
 
 @engine.on(engine.EVENTS.KEYPRESS)
 def input(key):
-    if key == engine.Keyboard.R:
+    if key == engine.Keyboard.KEYS.R:
         sound.position = 0
 
-    if key == engine.Keyboard.SPACE:
+    if key == engine.Keyboard.KEYS.SPACE:
         if sound.paused:
             sound.play()
         else:
             sound.pause()
         print(f"playing={sound.playing}, paused={sound.paused}")
 
-    if key == engine.Keyboard.P:
+    if key == engine.Keyboard.KEYS.P:
         sound.play()
         print("playing")
 
-    if key == engine.Keyboard.S:
+    if key == engine.Keyboard.KEYS.S:
         sound.stop()
         print("stopped")
 
-    if key == engine.Keyboard.L:
+    if key == engine.Keyboard.KEYS.L:
         sound.loop = not sound.loop
         print(f"loop={sound.loop}")
 
-    if key == engine.Keyboard.RIGHT:
+    if key == engine.Keyboard.KEYS.RIGHT:
         sound.position += 1000
-    elif key == engine.Keyboard.LEFT:
+    elif key == engine.Keyboard.KEYS.LEFT:
         sound.position -= 1000
 
-    if key == engine.Keyboard.UP:
+    if key == engine.Keyboard.KEYS.UP:
         sound.volume += 0.5
         print(f"volume={sound.volume}")
-    elif key == engine.Keyboard.DOWN:
+    elif key == engine.Keyboard.KEYS.DOWN:
         sound.volume -= 0.5
         print(f"volume={sound.volume}")
 

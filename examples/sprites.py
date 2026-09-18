@@ -23,6 +23,7 @@ flip_index = 0
 
 graphics.setBackgroundColor(20, 24, 32)
 
+
 @engine.draw
 def draw():
     sprite.draw()
@@ -37,18 +38,18 @@ def update(dt):
 def on_key_press(key):
     global flip_index
 
-    if key == engine.Keyboard.F:
+    if key == engine.Keyboard.KEYS.F:
         flip_index = (flip_index + 1) % len(flip_modes)
         sprite.flip_mode = flip_modes[flip_index]
-    elif key == engine.Keyboard.C:
+    elif key == engine.Keyboard.KEYS.C:
         sprite.center_point = None
-    elif key == engine.Keyboard.A:
+    elif key == engine.Keyboard.KEYS.A:
         sprite.alpha = 100 if sprite.alpha == 220 else 220
-    elif key == engine.Keyboard.R:
+    elif key == engine.Keyboard.KEYS.R:
         sprite.color_mod = (
             (255, 220, 220) if sprite.color_mod != (255, 220, 220) else (220, 255, 220)
         )
-    elif key == engine.Keyboard.K:
+    elif key == engine.Keyboard.KEYS.K:
         sprite.kill()
 
 

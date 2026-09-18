@@ -35,8 +35,6 @@ class Luma_Sprite:
         self.texture = texture
         self.is_alive = True
         self.center_point = None
-        self._alpha = 255
-        self._color_mod = (255, 255, 255)
         self.flip_mode = FLIP_MODE.NONE
         self.angle = 0.0
 

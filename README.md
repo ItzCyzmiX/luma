@@ -36,7 +36,7 @@ def update(dt):
 
 @engine.on(Luma.EVENTS.KEYPRESS)
 def on_key_press(key):
-	if key == Luma.Keyboard.SPACE:
+	if key == engine.Keyboard.KEYS.SPACE:
 		print("Space pressed")
 
 

@@ -73,7 +73,7 @@ class Game:
 
     def update(self, dt):
         # Player
-        self.player.update(dt, engine.Keyboard.Z, engine.Keyboard.S)
+        self.player.update(dt, engine.Keyboard.KEYS.Z, engine.Keyboard.KEYS.S)
 
         # Simple AI
         ball_center = self.ball.y + self.ball.size / 2
