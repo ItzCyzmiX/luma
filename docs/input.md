@@ -1,10 +1,10 @@
 # Input
 
-Luma exposes keyboard input through `Luma.EVENTS` and `Luma.Keyboard`.
+Luma exposes keyboard input through `Luma.EVENTS` and `engine.Keyboard`.
 
 ## Key press and release
 
-`KEYPRESS` receives a `Luma.Keyboard` value when a key is initially pressed.
+`KEYPRESS` receives a `Luma.Keyboard.KEYS` value when a key is initially pressed.
 Holding the key does not repeatedly dispatch `KEYPRESS`.
 
 ```python

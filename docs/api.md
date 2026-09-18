@@ -73,23 +73,23 @@ Stops playback and resets `position` to zero.
 
 ### Properties
 
-| Property | Description |
-| --- | --- |
-| `path` | Audio file path. Assigning a new path reloads the sound. |
-| `playing` | `True` while the sound is actively playing. |
-| `paused` | `True` while playback is paused. |
-| `loop` | Restart the sound automatically when it finishes. |
-| `volume` | Floating-point gain, defaulting to `1.0`. Values below zero are clamped to zero. |
-| `position` | Current or requested playback position in milliseconds. |
-| `duration` | Sound length in milliseconds. |
-| `on_finish` | No-argument callback invoked when non-looping playback finishes. |
+| Property    | Description                                                                      |
+| ----------- | -------------------------------------------------------------------------------- |
+| `path`      | Audio file path. Assigning a new path reloads the sound.                         |
+| `playing`   | `True` while the sound is actively playing.                                      |
+| `paused`    | `True` while playback is paused.                                                 |
+| `loop`      | Restart the sound automatically when it finishes.                                |
+| `volume`    | Floating-point gain, defaulting to `1.0`. Values below zero are clamped to zero. |
+| `position`  | Current or requested playback position in milliseconds.                          |
+| `duration`  | Sound length in milliseconds.                                                    |
+| `on_finish` | No-argument callback invoked when non-looping playback finishes.                 |
 
 ### `kill()`
 
 Releases the native audio and track resources. The audio manager releases all
 remaining sounds during engine shutdown.
 
-## `Luma.Keyboard`
+## `engine.Keyboard`
 
 ### `isKeyHeld(key) -> bool`
 
@@ -117,14 +117,14 @@ Destroys SDL resources, quits SDL, and dispatches `Luma.EVENTS.QUIT`.
 
 ## `Luma.EVENTS`
 
-| Member | Callback arguments |
-| --- | --- |
-| `KEYPRESS` | `key: engine.Keyboard.KEYS` |
-| `KEYUP` | `key: engine.Keyboard.KEYS` |
-| `QUIT` | none |
-| `MOUSEPRESS` | `button, position, clicks` |
-| `MOUSEUP` | `button, position, clicks` |
-| `MOUSEMOTION` | `position, relative` |
+| Member        | Callback arguments          |
+| ------------- | --------------------------- |
+| `KEYPRESS`    | `key: engine.Keyboard.KEYS` |
+| `KEYUP`       | `key: engine.Keyboard.KEYS` |
+| `QUIT`        | none                        |
+| `MOUSEPRESS`  | `button, position, clicks`  |
+| `MOUSEUP`     | `button, position, clicks`  |
+| `MOUSEMOTION` | `position, relative`        |
 
 ## `engine.Keyboard.KEYS`
 
