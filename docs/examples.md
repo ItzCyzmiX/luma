@@ -27,8 +27,8 @@ mouse button callbacks, mouse motion, and the tracked mouse position.
 python examples/shapes.py
 ```
 
-`shapes.py` demonstrates filled and outlined rectangles and circles, points,
-lines, draw colors, and a background color.
+`shapes.py` demonstrates filled and outlined rectangles and circles, thick
+lines and polygon outlines, points, draw colors, and a background color.
 
 ## Sprites
 

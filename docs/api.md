@@ -182,25 +182,33 @@ Accepts `r, g, b`, `r, g, b, a`, or one tuple/list containing those values.
 
 ### `resetDrawColor()`
 
-Sets the draw color to opaque black.
+Sets the draw color to opaque white.
 
-### `drawRect(x, y, w, h, fill: bool = True)`
+### `drawRect(x, y, w, h, filled: bool = True, thickness: int = 1)`
 
-Draws a filled rectangle by default. Pass `fill=False` to draw only its
-outline.
+Draws a filled rectangle by default. Pass `filled=False` to draw only its
+outline. `thickness` controls the outline width. Odd values generally look
+best for rectangle outlines, such as `5`.
 
 ### `drawPoint(x, y)`
 
 Draws a single point using the current draw color.
 
-### `drawLine(x1, y1, x2, y2)`
+### `drawLine(x1, y1, x2, y2, thickness: int = 1)`
 
 Draws a line between the two supplied points using the current draw color.
+`thickness` controls the line width.
 
-### `drawCircle(center_x, center_y, radius, filled: bool = True)`
+### `drawPolygon(points, filled: bool = False, thickness: int = 1)`
+
+Draws a closed polygon from a list of `(x, y)` points using the current draw
+color. `thickness` controls the outline width. Filled polygons are not
+available yet.
+
+### `drawCircle(center_x, center_y, radius, filled: bool = True, thickness: int = 1)`
 
 Draws a filled circle by default. Pass `filled=False` to draw only its
-circumference.
+circumference. `thickness` controls the circumference width.
 
 ### `setBackgroundColor(*args)`
 
