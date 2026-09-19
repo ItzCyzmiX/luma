@@ -18,6 +18,20 @@ the default bundled library locations.
 Creates the SDL window and renderer. On success, `engine.Graphics` is a
 `Luma_Graphics` instance and `engine.Mouse` is available.
 
+`flags` accepts a window flag value from `Luma.WINDOW_FLAGS`.
+Common examples include `FULLSCREEN`, `RESIZABLE`, `BORDERLESS`,
+`HIDDEN`, `MAXIMIZED`, and `ALWAYS_ON_TOP`. Combine flags with the bitwise OR
+operator:
+
+```python
+flags = (
+    Luma.WINDOW_FLAGS.RESIZABLE
+    | Luma.WINDOW_FLAGS.BORDERLESS
+    | Luma.WINDOW_FLAGS.HIDDEN
+)
+engine.create_window("Title", 800, 600, flags=flags)
+```
+
 ### `draw(function)`
 
 Registers the function called after the renderer is cleared. The function
@@ -133,6 +147,32 @@ An enum containing the supported keyboard values. It includes alphabetic keys
 `ESCAPE`, `BACKSPACE`, `TAB`, `DELETE`, `CAPSLOCK`, and `F1` through `F12`.
 
 Use it as `engine.Keyboard.KEYS.SPACE`, `engine.Keyboard.KEYS.A`, and similar.
+
+## `Luma.WINDOW_FLAGS`
+
+`Luma.WINDOW_FLAGS` exposes the SDL window flag enum used by
+`create_window()`. It is an `IntFlag`, so individual flags can be combined
+with `|` and passed as the `flags` argument.
+
+```python
+engine = Luma()
+flags = Luma.WINDOW_FLAGS.RESIZABLE | Luma.WINDOW_FLAGS.BORDERLESS
+engine.create_window("Resizable borderless window", 1280, 720, flags=flags)
+```
+
+Common members include:
+
+- `DEFAULT` - default window behavior
+- `FULLSCREEN` - fullscreen mode
+- `OPENGL` - usable with an OpenGL context
+- `RESIZABLE` - window can be resized
+- `BORDERLESS` - no window decoration
+- `HIDDEN` - starts hidden until shown
+- `MINIMIZED` - starts minimized
+- `MAXIMIZED` - starts maximized
+- `ALWAYS_ON_TOP` - keeps the window above others
+- `NOT_FOCUSABLE` - the window cannot receive focus
+- `TRANSPARENT` - transparent window buffer, use a transparent draw color to see through it (IT IS NOT CLICK-THROUGH)
 
 ## `Luma_Graphics`
 

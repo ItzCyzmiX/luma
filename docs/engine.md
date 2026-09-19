@@ -26,8 +26,20 @@ engine.create_window("Title", 800, 600)
 ```
 
 The method takes `title`, `width`, `height`, and an optional SDL window `flags`
-integer. After it succeeds, `engine.Graphics` and `engine.Mouse` are ready to
-use.
+value. Use `Luma.WINDOW_FLAGS` for a readable, flag-combinable API:
+
+```python
+flags = (
+    Luma.WINDOW_FLAGS.RESIZABLE
+    | Luma.WINDOW_FLAGS.BORDERLESS
+    | Luma.WINDOW_FLAGS.ALWAYS_ON_TOP
+)
+engine.create_window("Title", 800, 600, flags=flags)
+```
+
+`Luma.WINDOW_FLAGS` is an `IntFlag`, so each option is a named bitmask and can
+be combined with `|`. After it succeeds, `engine.Graphics` and `engine.Mouse`
+are ready to use.
 
 ## Callbacks
 
