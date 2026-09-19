@@ -24,10 +24,12 @@ from luma.sdl.font import SDLTTFBindings
 from luma.sdl.image import SDLImageBindings
 from luma.sdl.mixer import SDLMixerBindings
 from luma.sdl.sdl3 import SDL3Bindings
+from luma.sdl.window import SDL_WindowFlags
 
 
 class Luma:
     EVENTS = DEFAULT_EVENTS_ENUM
+    WINDOW_FLAGS = SDL_WindowFlags
 
     def __init__(
         self,
@@ -72,9 +74,15 @@ class Luma:
 
         self.Audio = Luma_AudioManager(self)
 
-    def create_window(self, title: str, width: int, height: int, flags: int = 0):
+    def create_window(
+        self,
+        title: str,
+        width: int,
+        height: int,
+        flags: WINDOW_FLAGS = WINDOW_FLAGS.DEFAULT,
+    ):
 
-        self.window = self.sdl.create_window(title.encode(), width, height, flags)
+        self.window = self.sdl.create_window(title.encode(), width, height, flags.value)
 
         if not self.window:
             self.quit()
@@ -103,11 +111,11 @@ class Luma:
         self._init_method = fn
         return fn
 
-    def draw(self, fn: Callable[[], None]) ->  Callable[[], None]:
+    def draw(self, fn: Callable[[], None]) -> Callable[[], None]:
         self._draw_method = fn
         return fn
 
-    def update(self, fn: Callable[[float], None]) ->  Callable[[float], None]:
+    def update(self, fn: Callable[[float], None]) -> Callable[[float], None]:
         self._update_method = fn
         return fn
 

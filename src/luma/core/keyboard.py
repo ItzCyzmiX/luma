@@ -12,7 +12,7 @@ class Luma_Keyboard:
 
     def __init__(self, engine: "Luma"):
         self.engine = engine
-        self._keys_pressed: set[KEYS] = set() 
+        self._keys_pressed: set[Luma_Keyboard.KEYS] = set()
 
     @property
     def sdl(self):
@@ -28,21 +28,25 @@ class Luma_Keyboard:
         return self._keys_pressed
 
     def keyToKeyCode(self, key: str):
-        return KEYS(self.sdl.get_keycode_from_name(key.encode()))
+        return Luma_Keyboard.KEYS(self.sdl.get_keycode_from_name(key.encode()))
 
 
 def key_down(luma: "Luma", event: SDL_Event):
     from luma.core.event import DEFAULT_EVENTS_ENUM
 
-    if KEYS(event.key.key) not in luma.Keyboard.currentPressed():
-        luma.event_manager.dispatch(DEFAULT_EVENTS_ENUM.KEYPRESS, KEYS(event.key.key))
+    if Luma_Keyboard.KEYS(event.key.key) not in luma.Keyboard.currentPressed():
+        luma.event_manager.dispatch(
+            DEFAULT_EVENTS_ENUM.KEYPRESS, Luma_Keyboard.KEYS(event.key.key)
+        )
 
-    luma.Keyboard._keys_pressed.add(KEYS(event.key.key))
+    luma.Keyboard._keys_pressed.add(Luma_Keyboard.KEYS(event.key.key))
 
 
 def key_up(luma: "Luma", event: SDL_Event):
     from luma.core.event import DEFAULT_EVENTS_ENUM
 
-    luma.Keyboard._keys_pressed.discard(KEYS(event.key.key))
+    luma.Keyboard._keys_pressed.discard(Luma_Keyboard.KEYS(event.key.key))
 
-    luma.event_manager.dispatch(DEFAULT_EVENTS_ENUM.KEYUP, KEYS(event.key.key))
+    luma.event_manager.dispatch(
+        DEFAULT_EVENTS_ENUM.KEYUP, Luma_Keyboard.KEYS(event.key.key)
+    )
