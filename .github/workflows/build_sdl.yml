@@ -34,6 +34,17 @@ jobs:
       - name: Configure SDL3
         run: |
           cmake -S SDL -B build -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_UNIX_CONSOLE_BUILD=ON
+        
+      - name: Install Linux build dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev \
+            libxfixes-dev libxss-dev libxkbcommon-dev libxtst-dev \
+            libwayland-dev wayland-protocols libdrm-dev libgbm-dev \
+            libgl1-mesa-dev libegl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
 
       - name: Build SDL3
         run: cmake --build build --config Release
