@@ -51,7 +51,7 @@ jobs:
 
       - name: Configure & build SDL3
         run: |
-          cmake -S SDL -B build-sdl3 -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF -DSDL_UNIX_CONSOLE_BUILD=ON
+          cmake -S SDL -B build-sdl3 -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF
           cmake --build build-sdl3 --config Release
           cmake --install build-sdl3 --prefix ${{ github.workspace }}/install-sdl3 --config Release
 
