@@ -46,8 +46,11 @@ jobs:
             libgl1-mesa-dev libegl1-mesa-dev \
             libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
 
-      - name: Build SDL3
-        run: cmake --build build --config Release
+      - name: Configure & build SDL3
+        run: |
+          cmake -S SDL -B build-sdl3 -DCMAKE_BUILD_TYPE=Release -DSDL_SHARED=ON -DSDL_STATIC=OFF
+          cmake --build build-sdl3 --config Release
+          cmake --install build-sdl3 --prefix ${{ github.workspace }}/install-sdl3 --config Release
 
       # Windows
       - name: Prepare Windows binary
