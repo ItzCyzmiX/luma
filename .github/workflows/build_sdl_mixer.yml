@@ -38,11 +38,16 @@ jobs:
       - name: Setup CMake
         uses: ./.github/actions/setup-cmake
 
-      - name: Install Linux dependencies
+      - name: Install Linux build dependencies
         if: runner.os == 'Linux'
         run: |
           sudo apt-get update
-          sudo apt-get install -y libflac-dev libvorbis-dev libopus-dev libopusfile-dev libmpg123-dev libmodplug-dev libfluidsynth-dev libwavpack-dev libxtst-dev
+          sudo apt-get install -y \
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxi-dev \
+            libxfixes-dev libxss-dev libxkbcommon-dev libxtst-dev \
+            libwayland-dev wayland-protocols libdrm-dev libgbm-dev \
+            libgl1-mesa-dev libegl1-mesa-dev \
+            libasound2-dev libpulse-dev libudev-dev libdbus-1-dev
 
       - name: Configure & build SDL3
         run: |
